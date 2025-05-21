@@ -11,8 +11,6 @@ import mvc.Model.User;
  * @author izzaa
  */
 public interface IUser {
-    public void insert(User u);
-    public void read(int id);
-    public void update(User u);
-    public void delete(int id);
+    void insert(User user);
+    User login(String username, String password);
 }
