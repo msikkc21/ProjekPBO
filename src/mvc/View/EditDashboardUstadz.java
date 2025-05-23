@@ -4,19 +4,124 @@
  */
 package mvc.View;
 
+import java.text.SimpleDateFormat;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import mvc.Controller.ControllerUstadz;
+import mvc.Model.Ustadz;
+import mvc.View.DasboardUstadz;
+
 /**
  *
  * @author ASUS
  */
 public class EditDashboardUstadz extends javax.swing.JFrame {
-
+    private ControllerUstadz controller;
+    private int ustadzIdToEdit;
     /**
      * Creates new form EditDashboardUstadz
      */
-    public EditDashboardUstadz() {
+    public EditDashboardUstadz(int ustadzId) { // Terima ID ustadz yang akan diedit
         initComponents();
+        this.ustadzIdToEdit = ustadzId;
+        controller = new ControllerUstadz(null, null, this); // Inisialisasi controller
+//        controller.fillEditForm(ustadzId); // Panggil method untuk mengisi form
+
+        // Tambahkan action listener untuk tombol Simpan dan Kembali
+        BtnSimpan.addActionListener(e -> controller.updateUstadz());
+        BtnKembali.addActionListener(e -> {
+            this.dispose(); // Tutup form edit
+            // Optional: Buka kembali dashboard atau refresh dashboard
+            DasboardUstadz dashboard = new DasboardUstadz(this.ustadzIdToEdit);
+            dashboard.setVisible(true);
+        });
+    }
+    
+    public void setUstadzDataToForm(Ustadz ustadz) {
+        if (ustadz != null) {
+            // Kita tidak punya TxtID di sini, jadi kita simpan di field `ustadzIdToEdit`
+            // TxtID.setText(ustadz.getId().toString()); // Jika Anda punya TxtID tersembunyi
+            TxtNama.setText(ustadz.getNama());
+            TxtTanggalLahir.setText(formatDate(ustadz.getTanggal_Lahir())); // Format tanggal
+            TxtNomorTelepon.setText(ustadz.getNomor_Telepon());
+            TxtTanggalBergabung.setText(formatDate(ustadz.getTanggal_Bergabung())); // Format tanggal
+            TxtAlamat.setText(ustadz.getAlamat());
+            ComboStatus.setSelectedItem(ustadz.getStatus());
+        } else {
+            JOptionPane.showMessageDialog(this, "Data Ustadz tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose(); // Tutup form jika data tidak ditemukan
+        }
+    }
+    
+    public Ustadz getUstadzDataFromForm() {
+        Ustadz ustadz = new Ustadz();
+        ustadz.setId(this.ustadzIdToEdit); // Set ID dari field yang disimpan
+        ustadz.setNama(TxtNama.getText());
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sesuaikan format dengan input
+            ustadz.setTanggal_Lahir(sdf.parse(TxtTanggalLahir.getText()));
+            ustadz.setTanggal_Bergabung(sdf.parse(TxtTanggalBergabung.getText()));
+        } catch (java.text.ParseException e) {
+            JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY.", "Error Tanggal", JOptionPane.ERROR_MESSAGE);
+            return null; // Kembalikan null jika ada error parsing tanggal
+        }
+        ustadz.setAlamat(TxtAlamat.getText());
+        ustadz.setNomor_Telepon(TxtNomorTelepon.getText());
+        ustadz.setStatus(ComboStatus.getSelectedItem().toString());
+        return ustadz;
+    }
+    
+    private String formatDate(java.util.Date date) {
+        if (date == null) {
+            return ""; // Atau return null, tergantung kebutuhan
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        return sdf.format(date);
     }
 
+    public void clearForm() {
+        TxtNama.setText("");
+        TxtTanggalLahir.setText("");
+        TxtNomorTelepon.setText("");
+        TxtTanggalBergabung.setText("");
+        TxtAlamat.setText("");
+        ComboStatus.setSelectedIndex(0); // Pilih item pertama
+    }
+    
+    public JTextField getTxtNama() {
+        return TxtNama;
+    }
+
+    public JTextField getTxtTanggalLahir() {
+        return TxtTanggalLahir;
+    }
+
+    public JTextField getTxtNomorTelepon() {
+        return TxtNomorTelepon;
+    }
+
+    public JTextField getTxtTanggalBergabung() {
+        return TxtTanggalBergabung;
+    }
+
+    public JComboBox<String> getComboStatus() { // Pastikan tipe genericnya String
+        return ComboStatus;
+    }
+
+    public JTextArea getTxtAlamat() {
+        return TxtAlamat;
+    }
+
+    public JButton getBtnSimpan() {
+        return BtnSimpan;
+    }
+
+    public JButton getBtnKembali() {
+        return BtnKembali;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,23 +133,25 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
 
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        BtnSimpan = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        LblNomorTelepon = new javax.swing.JLabel();
-        LblNama = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        LblTanggalLahir = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        LblAlamat = new javax.swing.JLabel();
-        LblTanggalBergabung = new javax.swing.JLabel();
-        LblStatus = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        BtnEdit = new javax.swing.JButton();
+        TxtTanggalLahir = new javax.swing.JTextField();
+        TxtNama = new javax.swing.JTextField();
+        TxtNomorTelepon = new javax.swing.JTextField();
+        TxtTanggalBergabung = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TxtAlamat = new javax.swing.JTextArea();
+        ComboStatus = new javax.swing.JComboBox<>();
+        BtnKembali = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,7 +169,7 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(494, Short.MAX_VALUE))
+                .addContainerGap(525, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -72,27 +179,23 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
                 .addContainerGap(9, Short.MAX_VALUE))
         );
 
-        jButton2.setBackground(new java.awt.Color(0, 102, 51));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Simpan");
+        BtnSimpan.setBackground(new java.awt.Color(0, 102, 51));
+        BtnSimpan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnSimpan.setForeground(new java.awt.Color(255, 255, 255));
+        BtnSimpan.setText("Simpan");
+        BtnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnSimpanActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 0)));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        LblNomorTelepon.setBackground(new java.awt.Color(255, 255, 255));
-        LblNomorTelepon.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
-
-        LblNama.setBackground(new java.awt.Color(255, 255, 255));
-        LblNama.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
-
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel7.setText("Status");
-
-        LblTanggalLahir.setBackground(new java.awt.Color(153, 153, 153));
-        LblTanggalLahir.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("Alamat");
@@ -107,14 +210,44 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("Tanggal Lahir");
 
-        LblAlamat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
-
-        LblTanggalBergabung.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
-
-        LblStatus.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
-
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel8.setText("Nomor Telepon");
+
+        TxtTanggalLahir.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 59)));
+        TxtTanggalLahir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtTanggalLahirActionPerformed(evt);
+            }
+        });
+
+        TxtNama.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 59)));
+        TxtNama.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtNamaActionPerformed(evt);
+            }
+        });
+
+        TxtNomorTelepon.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 59)));
+        TxtNomorTelepon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtNomorTeleponActionPerformed(evt);
+            }
+        });
+
+        TxtTanggalBergabung.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 59)));
+        TxtTanggalBergabung.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtTanggalBergabungActionPerformed(evt);
+            }
+        });
+
+        TxtAlamat.setColumns(20);
+        TxtAlamat.setRows(5);
+        TxtAlamat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
+        jScrollPane1.setViewportView(TxtAlamat);
+
+        ComboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "....", "Aktif", "Tidak Aktif" }));
+        ComboStatus.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -122,26 +255,34 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(LblNama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel5)
-                    .addComponent(LblTanggalLahir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(LblNomorTelepon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel6)
-                    .addComponent(LblTanggalBergabung, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(TxtNama)
+                    .addComponent(TxtNomorTelepon)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 220, Short.MAX_VALUE))
+                    .addComponent(TxtTanggalBergabung)
+                    .addComponent(TxtTanggalLahir))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(290, 290, 290))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(296, 296, 296))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(290, 290, 290)))
+                        .addGap(35, 41, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(284, 284, 284))
-                    .addComponent(LblStatus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(LblAlamat, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addComponent(ComboStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,26 +293,27 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(LblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(LblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(TxtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ComboStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addComponent(jLabel8))
+                            .addComponent(TxtTanggalLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(LblTanggalLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(LblNomorTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(TxtNomorTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(LblTanggalBergabung, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(LblAlamat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(TxtTanggalBergabung, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -182,7 +324,7 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,25 +334,43 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
                 .addGap(32, 32, 32))
         );
 
-        BtnEdit.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        BtnEdit.setText("Kembali");
-        BtnEdit.addActionListener(new java.awt.event.ActionListener() {
+        BtnKembali.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnKembali.setText("Kembali");
+        BtnKembali.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnEditActionPerformed(evt);
+                BtnKembaliActionPerformed(evt);
             }
         });
 
         jPanel3.setBackground(new java.awt.Color(0, 102, 51));
 
+        jPanel5.setBackground(new java.awt.Color(255, 0, 51));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 44, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 125, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 415, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -218,41 +378,58 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(BtnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(30, 30, 30))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(BtnKembali, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BtnSimpan))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(BtnEdit)
-                            .addComponent(jButton2))
-                        .addGap(16, 16, 16))))
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtnSimpan)
+                    .addComponent(BtnKembali))
+                .addContainerGap(117, Short.MAX_VALUE))
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BtnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditActionPerformed
+    private void BtnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKembaliActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BtnEditActionPerformed
+    }//GEN-LAST:event_BtnKembaliActionPerformed
+
+    private void TxtTanggalLahirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtTanggalLahirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtTanggalLahirActionPerformed
+
+    private void TxtNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtNamaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtNamaActionPerformed
+
+    private void TxtNomorTeleponActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtNomorTeleponActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtNomorTeleponActionPerformed
+
+    private void TxtTanggalBergabungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtTanggalBergabungActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtTanggalBergabungActionPerformed
+
+    private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnSimpanActionPerformed
 
     /**
      * @param args the command line arguments
@@ -261,43 +438,28 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditDashboardUstadz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditDashboardUstadz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditDashboardUstadz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditDashboardUstadz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EditDashboardUstadz().setVisible(true);
+                // Untuk testing, gunakan ID 1 atau ID ustadz yang ada di database Anda
+                new EditDashboardUstadz(1).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtnEdit;
-    private javax.swing.JLabel LblAlamat;
-    private javax.swing.JLabel LblNama;
-    private javax.swing.JLabel LblNomorTelepon;
-    private javax.swing.JLabel LblStatus;
-    private javax.swing.JLabel LblTanggalBergabung;
-    private javax.swing.JLabel LblTanggalLahir;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton BtnKembali;
+    private javax.swing.JButton BtnSimpan;
+    private javax.swing.JComboBox<String> ComboStatus;
+    private javax.swing.JTextArea TxtAlamat;
+    private javax.swing.JTextField TxtNama;
+    private javax.swing.JTextField TxtNomorTelepon;
+    private javax.swing.JTextField TxtTanggalBergabung;
+    private javax.swing.JTextField TxtTanggalLahir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -309,5 +471,11 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    private Object DasboardUstadz(int ustadzId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

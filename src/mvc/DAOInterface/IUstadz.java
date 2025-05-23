@@ -13,6 +13,7 @@ public interface IUstadz {
     public void insert(Ustadz u);
     public void update(Ustadz u);
     public void delete(int id);
+    public Ustadz getById(int id);
     public List<Ustadz> getAll();
     public List<Ustadz> getCariNama(String nama);
 }

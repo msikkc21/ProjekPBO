@@ -4,17 +4,101 @@
  */
 package mvc.View;
 
+import java.text.SimpleDateFormat;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import mvc.Controller.ControllerUstadz;
+import mvc.Model.Ustadz;
+
 /**
  *
  * @author izzaa
  */
 public class DasboardUstadz extends javax.swing.JFrame {
-
+    private ControllerUstadz controller;
+    private int loggedInUstadzId;
     /**
      * Creates new form DasboardUstadz
      */
-    public DasboardUstadz() {
+    public DasboardUstadz(int loggedInUstadzId) { // Terima ID ustadz yang login
         initComponents();
+        this.loggedInUstadzId = loggedInUstadzId;
+        controller = new ControllerUstadz(null, this, null); // Inisialisasi controller
+        controller.displayLoggedInUstadzData(loggedInUstadzId); // Panggil method untuk menampilkan data
+
+        // Tambahkan action listener untuk tombol Edit dan Logout
+        BtnEdit.addActionListener(e -> {
+            // Saat tombol Edit diklik, panggil metode prepareEditForm dari controller
+            controller.prepareEditForm(this.loggedInUstadzId);
+            this.dispose(); // Opsional: tutup dashboard saat form edit dibuka
+        });
+        BtnLogout.addActionListener(e -> controller.logout()); // Implementasikan logout di controller
+        BtnSetoranSantri.addActionListener(e -> JOptionPane.showMessageDialog(this, "Fitur Setoran Santri akan diimplementasikan!"));
+    }
+    
+    public void displayUstadz(Ustadz ustadz) {
+        if (ustadz != null) {
+            LblNama.setText(ustadz.getNama());
+            LblTanggalLahir.setText(formatDate(ustadz.getTanggal_Lahir()));
+            LblNomorTelepon.setText(ustadz.getNomor_Telepon());
+            LblTanggalBergabung.setText(formatDate(ustadz.getTanggal_Bergabung()));
+            LblStatus.setText(ustadz.getStatus());
+            LblAlamat.setText(ustadz.getAlamat());
+        } else {
+            // Kosongkan label jika data tidak ditemukan
+            LblNama.setText("-");
+            LblTanggalLahir.setText("-");
+            LblNomorTelepon.setText("-");
+            LblTanggalBergabung.setText("-");
+            LblStatus.setText("-");
+            LblAlamat.setText("-");
+        }
+    }
+    
+    private String formatDate(java.util.Date date) {
+        if (date == null) {
+            return "-";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        return sdf.format(date);
+    }
+    
+    public JLabel getLblNama() {
+        return LblNama;
+    }
+
+    public JLabel getLblTanggalLahir() {
+        return LblTanggalLahir;
+    }
+
+    public JLabel getLblNomorTelepon() {
+        return LblNomorTelepon;
+    }
+
+    public JLabel getLblTanggalBergabung() {
+        return LblTanggalBergabung;
+    }
+
+    public JLabel getLblStatus() {
+        return LblStatus;
+    }
+
+    public JLabel getLblAlamat() {
+        return LblAlamat;
+    }
+
+    // Getters untuk JButton (sudah ada, bagus)
+    public JButton getBtnEdit() {
+        return BtnEdit;
+    }
+
+    public JButton getBtnSetoranSantri() {
+        return BtnSetoranSantri;
+    }
+
+    public JButton getBtnLogout() {
+        return BtnLogout;
     }
 
     /**
@@ -42,10 +126,11 @@ public class DasboardUstadz extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         BtnEdit = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        BtnLogout = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        BtnSetoranSantri = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 153, 153));
@@ -104,7 +189,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
                     .addComponent(LblNomorTelepon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel6)
                     .addComponent(LblTanggalBergabung, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel7)
@@ -114,7 +199,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
                         .addGap(284, 284, 284))
                     .addComponent(LblStatus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(LblAlamat, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,7 +240,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,23 +260,46 @@ public class DasboardUstadz extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(0, 102, 51));
 
+        jPanel5.setBackground(new java.awt.Color(255, 0, 51));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 44, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 125, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 415, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(0, 102, 51));
 
-        jButton1.setBackground(new java.awt.Color(255, 0, 0));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Logout");
+        BtnLogout.setBackground(new java.awt.Color(255, 0, 0));
+        BtnLogout.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnLogout.setForeground(new java.awt.Color(255, 255, 255));
+        BtnLogout.setText("Logout");
+        BtnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnLogoutActionPerformed(evt);
+            }
+        });
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -206,7 +314,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(BtnLogout)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -214,46 +322,49 @@ public class DasboardUstadz extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(BtnLogout)
                     .addComponent(jLabel3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton2.setText("Isi Setoran");
+        BtnSetoranSantri.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnSetoranSantri.setText("Setoran Santri");
+        BtnSetoranSantri.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnSetoranSantriActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(BtnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 558, Short.MAX_VALUE)
-                        .addComponent(jButton2))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(30, 30, 30))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(BtnSetoranSantri))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(BtnEdit)
-                            .addComponent(jButton2))
-                        .addGap(16, 16, 16))))
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtnEdit)
+                    .addComponent(BtnSetoranSantri))
+                .addGap(16, 120, Short.MAX_VALUE))
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -263,6 +374,14 @@ public class DasboardUstadz extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnEditActionPerformed
 
+    private void BtnSetoranSantriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSetoranSantriActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnSetoranSantriActionPerformed
+
+    private void BtnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLogoutActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnLogoutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -270,7 +389,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -293,21 +412,22 @@ public class DasboardUstadz extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DasboardUstadz().setVisible(true);
+                // Untuk testing, gunakan ID 1 atau ID ustadz yang ada di database Anda
+                new DasboardUstadz(1).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnEdit;
+    private javax.swing.JButton BtnLogout;
+    private javax.swing.JButton BtnSetoranSantri;
     private javax.swing.JLabel LblAlamat;
     private javax.swing.JLabel LblNama;
     private javax.swing.JLabel LblNomorTelepon;
     private javax.swing.JLabel LblStatus;
     private javax.swing.JLabel LblTanggalBergabung;
     private javax.swing.JLabel LblTanggalLahir;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -319,5 +439,6 @@ public class DasboardUstadz extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     // End of variables declaration//GEN-END:variables
 }

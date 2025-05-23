@@ -11,21 +11,21 @@ import javax.swing.table.AbstractTableModel;
  */
 public class TabelModelUstadz extends AbstractTableModel{
     List<Ustadz> lu;
-    
+
     public TabelModelUstadz(List<Ustadz> lu){
         this.lu = lu;
     }
-    
+
     @Override
     public int getColumnCount(){
         return 7;
     }
-    
+
     @Override
     public int getRowCount() {
         return lu.size();
     }
-    
+
     @Override
     public String getColumnName(int column){
         switch(column){
@@ -47,7 +47,7 @@ public class TabelModelUstadz extends AbstractTableModel{
                 return null;
         }
     }
-    
+
     @Override
     public Object getValueAt(int row, int column) {
         switch (column) {
@@ -69,5 +69,4 @@ public class TabelModelUstadz extends AbstractTableModel{
                 return null;
         }
     }
-       
 }

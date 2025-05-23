@@ -4,19 +4,86 @@
  */
 package mvc.View;
 
+import java.text.SimpleDateFormat;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import mvc.Controller.ControllerUstadz;
+import mvc.Model.Ustadz;
+
 /**
  *
  * @author izzaa
  */
 public class FormUstadz extends javax.swing.JFrame {
-
+    private ControllerUstadz controller;
     /**
      * Creates new form FormUstadz
      */
     public FormUstadz() {
         initComponents();
+        controller = new ControllerUstadz(this, null, null);
+        BtnSimpan.addActionListener(e -> controller.insertUstadzAndShowDashboard()); // Ganti pemanggilan metode di sini
+        clearForm();
     }
-
+    
+    public Ustadz getUstadzDataFromForm() {
+        Ustadz ustadz = new Ustadz();
+        // ID tidak diset di sini karena akan dihasilkan oleh database
+        ustadz.setNama(TxtNama.getText());
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sesuaikan format dengan input
+            ustadz.setTanggal_Lahir(sdf.parse(TxtTanggalLahir.getText()));
+            ustadz.setTanggal_Bergabung(sdf.parse(TxtTanggalBergabung.getText()));
+        } catch (java.text.ParseException e) {
+            JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY.", "Error Tanggal", JOptionPane.ERROR_MESSAGE);
+            return null; // Kembalikan null jika ada error parsing tanggal
+        }
+        ustadz.setAlamat(TxtAlamat.getText());
+        ustadz.setNomor_Telepon(TxtTelepon.getText()); // Perhatikan getTxtNomorTelepon()
+        ustadz.setStatus(ComboStatus.getSelectedItem().toString());
+        return ustadz;
+    }
+    
+    public void clearForm() {
+        TxtNama.setText("");
+        TxtTanggalLahir.setText("");
+        TxtTelepon.setText(""); // Perhatikan getTxtNomorTelepon()
+        TxtTanggalBergabung.setText("");
+        TxtAlamat.setText("");
+        ComboStatus.setSelectedIndex(0); // Pilih item pertama
+    }
+    
+    public JTextField getTxtNama(){
+        return TxtNama;
+    }
+    
+    public JTextField getTxtTanggalLahir(){
+        return TxtTanggalLahir;
+    }
+    
+    public JTextField getTxtNomorTelepon(){
+        return TxtTelepon;
+    }
+    
+    public JTextField getTxtTanggalBergabung(){
+        return TxtTanggalBergabung;
+    }
+    
+    public JComboBox getComboStatus(){
+        return ComboStatus;
+    }
+    
+    public JTextArea getTxtAlamat(){
+        return TxtAlamat;
+    }
+    
+    public JButton getBtnSimpan(){
+        return BtnSimpan;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,17 +100,17 @@ public class FormUstadz extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         TxtNama = new javax.swing.JTextField();
-        BtnKirim = new javax.swing.JButton();
+        BtnSimpan = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TxtAlamat = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        TxtNama1 = new javax.swing.JTextField();
-        TxtNama2 = new javax.swing.JTextField();
-        TxtNama3 = new javax.swing.JTextField();
-        TxtNama4 = new javax.swing.JTextField();
+        TxtTanggalLahir = new javax.swing.JTextField();
+        TxtTelepon = new javax.swing.JTextField();
+        TxtTanggalBergabung = new javax.swing.JTextField();
+        ComboStatus = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 153, 153));
@@ -68,13 +135,13 @@ public class FormUstadz extends javax.swing.JFrame {
 
         TxtNama.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
 
-        BtnKirim.setBackground(new java.awt.Color(0, 102, 51));
-        BtnKirim.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        BtnKirim.setForeground(new java.awt.Color(255, 255, 255));
-        BtnKirim.setText("Simpan");
-        BtnKirim.addActionListener(new java.awt.event.ActionListener() {
+        BtnSimpan.setBackground(new java.awt.Color(0, 102, 51));
+        BtnSimpan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnSimpan.setForeground(new java.awt.Color(255, 255, 255));
+        BtnSimpan.setText("Simpan");
+        BtnSimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnKirimActionPerformed(evt);
+                BtnSimpanActionPerformed(evt);
             }
         });
 
@@ -131,16 +198,27 @@ public class FormUstadz extends javax.swing.JFrame {
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(221, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        TxtNama1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
+        TxtTanggalLahir.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
+        TxtTanggalLahir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtTanggalLahirActionPerformed(evt);
+            }
+        });
 
-        TxtNama2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
+        TxtTelepon.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
 
-        TxtNama3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
+        TxtTanggalBergabung.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
 
-        TxtNama4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
+        ComboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "......", "Aktif", "Tidak Aktif" }));
+        ComboStatus.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51)));
+        ComboStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboStatusActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -149,23 +227,23 @@ public class FormUstadz extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(TxtNama3, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TxtTanggalBergabung, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel1)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(BtnKirim, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(BtnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel6)
                             .addComponent(jLabel2)
                             .addComponent(jScrollPane1)
-                            .addComponent(TxtNama1)
+                            .addComponent(TxtTanggalLahir)
                             .addComponent(TxtNama)
                             .addComponent(jLabel3)
-                            .addComponent(TxtNama4)
                             .addComponent(jLabel5)
-                            .addComponent(TxtNama2, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(TxtTelepon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                            .addComponent(ComboStatus, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(40, 40, 40))
         );
         layout.setVerticalGroup(
@@ -178,35 +256,43 @@ public class FormUstadz extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TxtNama1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(TxtTanggalLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TxtNama2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(TxtTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TxtNama3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(TxtTanggalBergabung, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TxtNama4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ComboStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(BtnKirim)
-                .addGap(38, 38, 38))
+                .addGap(18, 18, 18)
+                .addComponent(BtnSimpan)
+                .addContainerGap(26, Short.MAX_VALUE))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BtnKirimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKirimActionPerformed
+    private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BtnKirimActionPerformed
+    }//GEN-LAST:event_BtnSimpanActionPerformed
+
+    private void TxtTanggalLahirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtTanggalLahirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtTanggalLahirActionPerformed
+
+    private void ComboStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ComboStatusActionPerformed
 
     /**
      * @param args the command line arguments
@@ -215,7 +301,7 @@ public class FormUstadz extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -244,13 +330,13 @@ public class FormUstadz extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtnKirim;
+    private javax.swing.JButton BtnSimpan;
+    private javax.swing.JComboBox<String> ComboStatus;
     private javax.swing.JTextArea TxtAlamat;
     private javax.swing.JTextField TxtNama;
-    private javax.swing.JTextField TxtNama1;
-    private javax.swing.JTextField TxtNama2;
-    private javax.swing.JTextField TxtNama3;
-    private javax.swing.JTextField TxtNama4;
+    private javax.swing.JTextField TxtTanggalBergabung;
+    private javax.swing.JTextField TxtTanggalLahir;
+    private javax.swing.JTextField TxtTelepon;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

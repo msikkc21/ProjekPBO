@@ -6,109 +6,166 @@ package mvc.Controller;
 import mvc.DAO.DAOUstadz;
 import mvc.DAOInterface.IUstadz;
 import mvc.Model.Ustadz;
-import mvc.Model.TabelModelUstadz;
+import mvc.Model.TabelModelUstadz; // Pastikan ini TabelModelUstadz, bukan TableModelUstadz
 import mvc.View.FormUstadz;
-
+import mvc.View.DasboardUstadz;
+import mvc.View.EditDashboardUstadz;
 import java.util.List;
 import javax.swing.JOptionPane;
+import java.util.Date; // Penting untuk Date object
+import java.text.SimpleDateFormat; // Untuk memformat dan mengurai tanggal
+
 /**
  *
  * @author ASUS
  */
 public class ControllerUstadz {
-    FormUstadz frame;
+    FormUstadz formUstadzView;
+    DasboardUstadz dashboardUstadzView;
+    EditDashboardUstadz editUstadzView;
     IUstadz implUstadz;
-    List<Ustadz> lb;
+    List<Ustadz> listUstadz; // Mengganti lb menjadi listUstadz
 
-    public ControllerUstadz(FormUstadz frame) {
-        this.frame = frame;
+    // Konstruktor disesuaikan untuk menerima view yang berbeda
+    public ControllerUstadz(FormUstadz formUstadzView, DasboardUstadz dashboardUstadzView, EditDashboardUstadz editUstadzView) {
+        this.formUstadzView = formUstadzView;
+        this.dashboardUstadzView = dashboardUstadzView;
+        this.editUstadzView = editUstadzView;
         implUstadz = new DAOUstadz();
-        lb = implUstadz.getAll();
+        // listUstadz = implUstadz.getAll(); // Hanya ambil data jika diperlukan di awal
     }
 
-    public void reset() {
-        frame.getTxtID().setText("");
-        frame.getTxtNama().setText("");
-        frame.getTxtTanggalLahir().setText("");
-        frame.getTxtAlamat().setText("");
-        frame.getTxtNoTelepon().setText("");
-        frame.getTxtTanggalBergabung().setText("");
-        frame.getTxtStatus().setSelectedItem("");
-    }
+    // --- Metode untuk FormUstadz (Mengisi data setelah registrasi) ---
+    public void insertUstadzAndShowDashboard() {
+        if (formUstadzView != null) {
+            if (formUstadzView.getTxtNama().getText().trim().isEmpty() ||
+                formUstadzView.getTxtNomorTelepon().getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(formUstadzView, "Nama dan Nomor Telepon tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-    public void isiTable() {
-        lb = implUstadz.getAll();
-        TabelModelUstadz tmu = new TabelModelUstadz(lb);
-        frame.getTableData().setModel(tmu);
-    }
+            Ustadz u = formUstadzView.getUstadzDataFromForm();
+            if (u != null) {
+                implUstadz.insert(u); // Setelah insert, objek 'u' akan memiliki ID yang baru dihasilkan dari database
+                JOptionPane.showMessageDialog(formUstadzView, "Data Ustadz berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                formUstadzView.clearForm();
+                formUstadzView.dispose(); // Tutup form registrasi
 
-    public void isiField(int row) {
-        frame.getTxtID().setText(lb.get(row).getId().toString());
-        frame.getTxtNama().setText(lb.get(row).getNama());
-        frame.getTxtTanggalLahir().setText(lb.get(row).getTanggal_Lahir().toString());
-        frame.getTxtAlamat().setText(lb.get(row).getAlamat());
-        frame.getTxtNoTelepon().setText(lb.get(row).getNomor_Telepon());
-        frame.getTxtTanggalBergabung().setText(lb.get(row).getTanggal_Bergabung().toString());
-        frame.getTxtStatus().setSelectedItem(lb.get(row).getStatus());
-    }
-
-    public void insert() {
-        if (!frame.getTxtNama().getText().trim().isEmpty() && !frame.getTxtNoTelepon().getText().trim().isEmpty()) {
-            Ustadz u = new Ustadz();
-            u.setNamaUstadz(frame.getTxtNama().getText());
-            u.setTanggalLahir(java.sql.Date.valueOf(frame.getTxtTanggalLahir().getText()));
-            u.setAlamat(frame.getTxtAlamat().getText());
-            u.setNomorTelepon(frame.getTxtNoTelepon().getText());
-            u.setTanggalBergabung(java.sql.Date.valueOf(frame.getTxtTanggalBergabung().getText()));
-            u.setStatus(frame.getTxtStatus().getSelectedItem().toString());
-            implUstadz.insert(u);
-            JOptionPane.showMessageDialog(null, "Simpan Data Sukses");
+                // Buka DasboardUstadz dengan ID ustadz yang baru saja di-insert
+                if (u.getId() != null) {
+                    DasboardUstadz newDashboard = new DasboardUstadz(u.getId());
+                    newDashboard.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Gagal mendapatkan ID Ustadz yang baru.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         } else {
-            JOptionPane.showMessageDialog(frame, "Data Tidak Boleh Kosong");
+            System.out.println("FormUstadz view tidak diatur untuk insert.");
         }
     }
 
-    public void update() {
-        if (!frame.getTxtID().getText().trim().isEmpty() &&
-            !frame.getTxtNama().getText().trim().isEmpty() &&
-            !frame.getTxtNoTelepon().getText().trim().isEmpty()) {
-            Ustadz u = new Ustadz();
-            u.setId(Integer.parseInt(frame.getTxtID().getText()));
-            u.setNamaUstadz(frame.getTxtNama().getText());
-            u.setTanggalLahir(java.sql.Date.valueOf(frame.getTxtTanggalLahir().getText()));
-            u.setAlamat(frame.getTxtAlamat().getText());
-            u.setNomorTelepon(frame.getTxtNoTelepon().getText());
-            u.setTanggalBergabung(java.sql.Date.valueOf(frame.getTxtTanggalBergabung().getText()));
-            u.setStatus(frame.getTxtStatus().getSelectedItem().toString());
-            implUstadz.update(u);
-            JOptionPane.showMessageDialog(null, "Update Data Sukses");
+    // --- Metode untuk DasboardUstadz (Menampilkan data ustadz yang login) ---
+    public void displayLoggedInUstadzData(int ustadzId) {
+        if (dashboardUstadzView != null) {
+            Ustadz ustadz = implUstadz.getById(ustadzId); // Mengambil satu Ustadz berdasarkan ID
+            dashboardUstadzView.displayUstadz(ustadz); // Memanggil metode di view untuk menampilkan
+            if (ustadz == null) {
+                JOptionPane.showMessageDialog(dashboardUstadzView, "Data Ustadz dengan ID " + ustadzId + " tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } else {
-            JOptionPane.showMessageDialog(frame, "Data Tidak Boleh Kosong");
+            System.out.println("DasboardUstadz view tidak diatur untuk display.");
         }
     }
 
-    public void delete() {
-        if (!frame.getTxtID().getText().trim().isEmpty()) {
-            int id = Integer.parseInt(frame.getTxtID().getText());
+    // --- Metode untuk EditDashboardUstadz (Mengedit data ustadz) ---
+    public void prepareEditForm(int ustadzId) {
+        Ustadz ustadz = implUstadz.getById(ustadzId); // Ambil data dari DAO
+        if (ustadz != null) {
+            EditDashboardUstadz editForm = new EditDashboardUstadz(ustadzId); // Buat instance form edit
+            editForm.setUstadzDataToForm(ustadz); // <-- Ini yang mengisi data ke form
+            editForm.setVisible(true); // Tampilkan form
+            // ... (opsional: tutup dashboard)
+        } else {
+            JOptionPane.showMessageDialog(null, "Data Ustadz tidak ditemukan untuk pengeditan.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void updateUstadz() {
+        if (editUstadzView != null) {
+            // Validasi sederhana
+            if (editUstadzView.getTxtNama().getText().trim().isEmpty() ||
+                editUstadzView.getTxtNomorTelepon().getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(editUstadzView, "Nama dan Nomor Telepon tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            Ustadz u = editUstadzView.getUstadzDataFromForm(); // Mengambil data dari form
+            if (u != null) { // Pastikan tidak ada error parsing tanggal
+                implUstadz.update(u);
+                JOptionPane.showMessageDialog(editUstadzView, "Data Ustadz berhasil diperbarui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                editUstadzView.dispose(); // Tutup form edit setelah update
+
+                // Buka kembali dashboard dengan data yang diperbarui
+                // u.getId() harusnya sudah terisi karena ini operasi update
+                if (u.getId() != null) {
+                    DasboardUstadz newDashboard = new DasboardUstadz(u.getId());
+                    newDashboard.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Gagal mengembalikan ke Dashboard. ID Ustadz tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            System.out.println("EditDashboardUstadz view tidak diatur untuk update.");
+        }
+    }
+
+    // --- Metode lain yang mungkin Anda perlukan ---
+
+    // Metode untuk logout (contoh sederhana)
+    public void logout() {
+        // Lakukan logika logout di sini, seperti menghapus sesi atau mengarahkan ke halaman login
+        JOptionPane.showMessageDialog(null, "Anda telah logout.", "Logout", JOptionPane.INFORMATION_MESSAGE);
+        if (dashboardUstadzView != null) {
+            dashboardUstadzView.dispose(); // Tutup dashboard
+        }
+        // Redirect ke halaman login (misalnya)
+        // new LoginForm().setVisible(true);
+    }
+
+    // Metode untuk mengisi tabel (jika ada tabel di dashboard lain atau admin)
+    public void fillTableAllUstadz() {
+        if (dashboardUstadzView != null) { // Atau view lain yang punya tabel
+            listUstadz = implUstadz.getAll();
+            TabelModelUstadz tmu = new TabelModelUstadz(listUstadz);
+            // dashboardUstadzView.getTableData().setModel(tmu); // Anda perlu getter getTableData di DasboardUstadz
+        }
+    }
+
+    // Metode untuk mengisi field di form edit/insert (jika ada tabel dan ingin mengedit dari pemilihan baris)
+    // Sepertinya metode ini lebih cocok di `prepareEditForm` atau `setUstadzDataToForm` di View.
+    // Dihapus karena sudah diganti dengan `prepareEditForm` dan `setUstadzDataToForm`.
+
+    // Metode insert (sudah di atas)
+    // Metode update (sudah di atas)
+
+    public void deleteUstadz(int id) { // ID diterima sebagai parameter
+        int confirm = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data ini?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
             implUstadz.delete(id);
-            JOptionPane.showMessageDialog(null, "Hapus Data Sukses");
-        } else {
-            JOptionPane.showMessageDialog(frame, "Pilih Data yang akan dihapus");
+            JOptionPane.showMessageDialog(null, "Data Ustadz berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            // Refresh tabel atau dashboard setelah penghapusan
+            // fillTableAllUstadz();
         }
     }
 
-    public void isiTableCariNama() {
-        lb = implUstadz.getCariNama(frame.getTxtCariNama().getText());
-        TableModelUstadz tmu = new TableModelUstadz(lb);
-        frame.getTableData().setModel(tmu);
-    }
-
-    public void carinama() {
-        if (!frame.getTxtCariNama().getText().trim().isEmpty()) {
-            implUstadz.getCariNama(frame.getTxtCariNama().getText());
-            isiTableCariNama();
-        } else {
-            JOptionPane.showMessageDialog(frame, "Silakan masukkan nama yang ingin dicari");
+    public void searchUstadzByName(String nama) {
+        listUstadz = implUstadz.getCariNama(nama);
+        TabelModelUstadz tmu = new TabelModelUstadz(listUstadz);
+        // Jika ada tabel di dashboard/view admin
+        // dashboardUstadzView.getTableData().setModel(tmu);
+        if (listUstadz.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tidak ada ustadz dengan nama '" + nama + "' ditemukan.", "Informasi", JOptionPane.INFORMATION_MESSAGE);
         }
     }
+
 }

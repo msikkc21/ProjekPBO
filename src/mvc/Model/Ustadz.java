@@ -17,10 +17,21 @@ public class Ustadz {
     private String nomor_telepon;
     private Date tanggal_bergabung;
     private String status;
-    
+
     public Ustadz(){}
-    
-    public Ustadz(int id, String nama,Date tanggal_lahir, String alamat, String nomor_telepon, Date tanggal_bergabung, String status) {
+
+    // Konstruktor untuk membuat objek Ustadz baru (ID mungkin 0 atau null jika belum di-insert)
+    public Ustadz(String nama, Date tanggal_lahir, String alamat, String nomor_telepon, Date tanggal_bergabung, String status) {
+        this.nama = nama;
+        this.tanggal_lahir = tanggal_lahir;
+        this.alamat = alamat;
+        this.nomor_telepon = nomor_telepon;
+        this.tanggal_bergabung = tanggal_bergabung;
+        this.status = status;
+    }
+
+    // Konstruktor lengkap, biasanya digunakan setelah mengambil data dari database
+    public Ustadz(Integer id, String nama, Date tanggal_lahir, String alamat, String nomor_telepon, Date tanggal_bergabung, String status) {
         this.id = id;
         this.nama = nama;
         this.tanggal_lahir = tanggal_lahir;
@@ -126,5 +137,5 @@ public class Ustadz {
      */
     public void setStatus(String status) {
         this.status = status;
-    } 
+    }
 }
