@@ -12,9 +12,9 @@ import mvc.Utils.PasswordUtils;
 import mvc.View.Auth.FormLogin;
 import mvc.View.Auth.FormRegister;
 import mvc.View.DashboardSantri;
-import mvc.View.DashboardUstadz;
+//import mvc.View.DashboardUstadz;
 import mvc.View.FormDataSantri;
-import mvc.View.FormDataUstadz;
+//import mvc.View.FormDataUstadz;
 /**
  *
  * @author izzaa
@@ -65,7 +65,7 @@ public class AuthController {
         if (role.equals("santri")) {
             new FormDataSantri(username).setVisible(true);
         } else if (role.equals("ustadz")) {
-            new FormDataUstadz(username).setVisible(true);
+//            new FormDataUstadz(username).setVisible(true);
         }
     }
     
@@ -88,7 +88,7 @@ public class AuthController {
             if (user.getRole().equalsIgnoreCase("santri")) {
                 new DashboardSantri(user.getUsername()).setVisible(true);
             } else if (user.getRole().equalsIgnoreCase("ustadz")) {
-                new DashboardUstadz(user.getUsername()).setVisible(true);
+//                new DashboardUstadz(user.getUsername()).setVisible(true);
             }
         } else {
             JOptionPane.showMessageDialog(frameLogin, "Username atau password salah!", "Login Gagal", JOptionPane.ERROR_MESSAGE);
