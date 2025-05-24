@@ -19,57 +19,68 @@ import mvc.View.DasboardUstadz;
  * @author ASUS
  */
 public class EditDashboardUstadz extends javax.swing.JFrame {
-    private ControllerUstadz controller;
+    private ControllerUstadz cbt;
     private int ustadzIdToEdit;
+    private int userIdAssociated;
     /**
      * Creates new form EditDashboardUstadz
      */
-    public EditDashboardUstadz(int ustadzId) { // Terima ID ustadz yang akan diedit
+     public EditDashboardUstadz(int ustadzId) {
         initComponents();
         this.ustadzIdToEdit = ustadzId;
-        controller = new ControllerUstadz(null, null, this); // Inisialisasi controller
-//        controller.fillEditForm(ustadzId); // Panggil method untuk mengisi form
+        // userIdAssociated akan diset nanti di setUstadzDataToForm() atau bisa juga dilewatkan di konstruktor ini jika tersedia dari panggilan sebelumnya.
+        cbt = new ControllerUstadz(null, null, this);
+        // Penting: Panggil fillEditForm() di sini untuk memuat data ustadz, termasuk userIdAssociated.
+        // Anda sudah memiliki commented out `controller.fillEditForm(ustadzId);`
+        // Aktifkan kembali atau panggil di sini
+        cbt.fillEditForm(ustadzId); // <--- Aktifkan kembali ini jika Anda ingin form otomatis mengisi data saat dibuka.
 
-        // Tambahkan action listener untuk tombol Simpan dan Kembali
-        BtnSimpan.addActionListener(e -> controller.updateUstadz());
+        BtnSimpan.addActionListener(e -> cbt.updateUstadz());
         BtnKembali.addActionListener(e -> {
-            this.dispose(); // Tutup form edit
-            // Optional: Buka kembali dashboard atau refresh dashboard
-            DasboardUstadz dashboard = new DasboardUstadz(this.ustadzIdToEdit);
-            dashboard.setVisible(true);
+            this.dispose();
+            // Perbaikan di sini: Buka DasboardUstadz dengan userIdAssociated
+            // Pastikan userIdAssociated sudah diset di setUstadzDataToForm() sebelum ini dipanggil
+            if (this.userIdAssociated != 0) { // Cek apakah userIdAssociated sudah ada nilainya (bukan 0)
+                new DasboardUstadz(this.userIdAssociated).setVisible(true); // Buka kembali dashboard dengan userId yang benar
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal kembali ke Dashboard. User ID tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE); //
+                // Opsional: Redirect ke halaman login jika userId tidak ditemukan dan tidak bisa kembali ke dashboard
+                // new FormLogin().setVisible(true);
+            }
         });
     }
     
     public void setUstadzDataToForm(Ustadz ustadz) {
         if (ustadz != null) {
-            // Kita tidak punya TxtID di sini, jadi kita simpan di field `ustadzIdToEdit`
-            // TxtID.setText(ustadz.getId().toString()); // Jika Anda punya TxtID tersembunyi
+            this.userIdAssociated = ustadz.getUserId(); // <--- BARU: Simpan userId yang terkait
             TxtNama.setText(ustadz.getNama());
-            TxtTanggalLahir.setText(formatDate(ustadz.getTanggal_Lahir())); // Format tanggal
-            TxtNomorTelepon.setText(ustadz.getNomor_Telepon());
-            TxtTanggalBergabung.setText(formatDate(ustadz.getTanggal_Bergabung())); // Format tanggal
+            TxtTanggalLahir.setText(formatDate(ustadz.getTanggal_lahir()));
+            TxtNomorTelepon.setText(ustadz.getNomor_telepon());
+            TxtTanggalBergabung.setText(formatDate(ustadz.getTanggal_bergabung()));
             TxtAlamat.setText(ustadz.getAlamat());
             ComboStatus.setSelectedItem(ustadz.getStatus());
         } else {
             JOptionPane.showMessageDialog(this, "Data Ustadz tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
-            this.dispose(); // Tutup form jika data tidak ditemukan
+            this.dispose();
         }
     }
     
     public Ustadz getUstadzDataFromForm() {
         Ustadz ustadz = new Ustadz();
-        ustadz.setId(this.ustadzIdToEdit); // Set ID dari field yang disimpan
+        ustadz.setId(this.ustadzIdToEdit); // Set ID unik ustadz untuk operasi update
+        ustadz.setUserId(this.userIdAssociated); // <--- BARU: Set userId yang terkait kembali ke objek Ustadz
+
         ustadz.setNama(TxtNama.getText());
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sesuaikan format dengan input
-            ustadz.setTanggal_Lahir(sdf.parse(TxtTanggalLahir.getText()));
-            ustadz.setTanggal_Bergabung(sdf.parse(TxtTanggalBergabung.getText()));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            ustadz.setTanggal_lahir(sdf.parse(TxtTanggalLahir.getText()));
+            ustadz.setTanggal_bergabung(sdf.parse(TxtTanggalBergabung.getText()));
         } catch (java.text.ParseException e) {
             JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY.", "Error Tanggal", JOptionPane.ERROR_MESSAGE);
-            return null; // Kembalikan null jika ada error parsing tanggal
+            return null;
         }
         ustadz.setAlamat(TxtAlamat.getText());
-        ustadz.setNomor_Telepon(TxtNomorTelepon.getText());
+        ustadz.setNomor_telepon(TxtNomorTelepon.getText());
         ustadz.setStatus(ComboStatus.getSelectedItem().toString());
         return ustadz;
     }
@@ -475,7 +486,4 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    private Object DasboardUstadz(int ustadzId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

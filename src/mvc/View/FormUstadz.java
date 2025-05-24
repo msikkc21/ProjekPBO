@@ -5,6 +5,7 @@
 package mvc.View;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -18,31 +19,47 @@ import mvc.Model.Ustadz;
  * @author izzaa
  */
 public class FormUstadz extends javax.swing.JFrame {
-    private ControllerUstadz controller;
+    private ControllerUstadz cbt;
+    private String username;
+    private int userIdFromAuth;
     /**
      * Creates new form FormUstadz
      */
     public FormUstadz() {
         initComponents();
-        controller = new ControllerUstadz(this, null, null);
-        BtnSimpan.addActionListener(e -> controller.insertUstadzAndShowDashboard()); // Ganti pemanggilan metode di sini
+        cbt = new ControllerUstadz(this, null, null);
+        BtnSimpan.addActionListener(e -> cbt.insertUstadzAndShowDashboard());
         clearForm();
+    }
+
+    public FormUstadz(int userId) { // Konstruktor yang menerima ID user
+        initComponents();
+        this.userIdFromAuth = userId; // Simpan ID user di sini
+        cbt = new ControllerUstadz(this, null, null);
+        BtnSimpan.addActionListener(e -> cbt.insertUstadzAndShowDashboard());
+        clearForm();
+        System.out.println("FormUstadz dibuka untuk User ID: " + userId);
     }
     
     public Ustadz getUstadzDataFromForm() {
         Ustadz ustadz = new Ustadz();
-        // ID tidak diset di sini karena akan dihasilkan oleh database
+        ustadz.setUserId(this.userIdFromAuth); // <--- BARU: Set userId di objek Ustadz
+        // ID ustadz (primary key tabel ustadz) akan di-generate otomatis oleh database.
+        // Tidak perlu set ustadz.setId() di sini.
+
         ustadz.setNama(TxtNama.getText());
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sesuaikan format dengan input
-            ustadz.setTanggal_Lahir(sdf.parse(TxtTanggalLahir.getText()));
-            ustadz.setTanggal_Bergabung(sdf.parse(TxtTanggalBergabung.getText()));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date tglLahir = sdf.parse(TxtTanggalLahir.getText());
+            Date tglBergabung = sdf.parse(TxtTanggalBergabung.getText());
+            ustadz.setTanggal_lahir(tglLahir);
+            ustadz.setTanggal_bergabung(tglBergabung);
         } catch (java.text.ParseException e) {
-            JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY.", "Error Tanggal", JOptionPane.ERROR_MESSAGE);
-            return null; // Kembalikan null jika ada error parsing tanggal
+            JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY. " + e.getMessage(), "Error Tanggal", JOptionPane.ERROR_MESSAGE);
+            return null;
         }
         ustadz.setAlamat(TxtAlamat.getText());
-        ustadz.setNomor_Telepon(TxtTelepon.getText()); // Perhatikan getTxtNomorTelepon()
+        ustadz.setNomor_telepon(TxtTelepon.getText());
         ustadz.setStatus(ComboStatus.getSelectedItem().toString());
         return ustadz;
     }
@@ -320,11 +337,32 @@ public class FormUstadz extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FormUstadz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+    try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FormUstadz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FormUstadz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FormUstadz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FormUstadz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormUstadz().setVisible(true);
+                // Berikan nilai placeholder untuk username dan userId saat pengujian
+                String testUsername = "testUstadz";
+                int testUserId = 999; // Contoh ID, bisa diganti sesuai kebutuhan pengujian
+
+//                new FormUstadz(testUsername, testUserId).setVisible(true); // <--- PERBAIKAN DI SINI
             }
         });
     }

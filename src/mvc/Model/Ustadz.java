@@ -1,16 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package mvc.Model;
 
 import java.util.Date;
-/**
- *
- * @author ASUS
- */
+
 public class Ustadz {
-    private Integer id;
+    private Integer id; // ID unik untuk entitas Ustadz
+    private Integer userId; // <--- BARU: Foreign key ke tabel user
     private String nama;
     private Date tanggal_lahir;
     private String alamat;
@@ -21,7 +15,9 @@ public class Ustadz {
     public Ustadz(){}
 
     // Konstruktor untuk membuat objek Ustadz baru (ID mungkin 0 atau null jika belum di-insert)
-    public Ustadz(String nama, Date tanggal_lahir, String alamat, String nomor_telepon, Date tanggal_bergabung, String status) {
+    // Tambahkan userId ke konstruktor ini
+    public Ustadz(Integer userId, String nama, Date tanggal_lahir, String alamat, String nomor_telepon, Date tanggal_bergabung, String status) {
+        this.userId = userId; // <--- BARU
         this.nama = nama;
         this.tanggal_lahir = tanggal_lahir;
         this.alamat = alamat;
@@ -31,14 +27,32 @@ public class Ustadz {
     }
 
     // Konstruktor lengkap, biasanya digunakan setelah mengambil data dari database
-    public Ustadz(Integer id, String nama, Date tanggal_lahir, String alamat, String nomor_telepon, Date tanggal_bergabung, String status) {
+    // Tambahkan userId ke konstruktor ini
+    public Ustadz(Integer id, Integer userId, String nama, Date tanggal_lahir, String alamat, String nomor_telepon, Date tanggal_bergabung, String status) {
         this.id = id;
+        this.userId = userId; // <--- BARU
         this.nama = nama;
         this.tanggal_lahir = tanggal_lahir;
         this.alamat = alamat;
         this.nomor_telepon = nomor_telepon;
         this.tanggal_bergabung = tanggal_bergabung;
         this.status = status;
+    }
+
+    // ... (getter dan setter yang sudah ada) ...
+
+    /**
+     * @return the userId
+     */
+    public Integer getUserId() { // <--- BARU: Getter untuk userId
+        return userId;
+    }
+
+    /**
+     * @param userId the userId to set
+     */
+    public void setUserId(Integer userId) { // <--- BARU: Setter untuk userId
+        this.userId = userId;
     }
 
     /**
@@ -72,14 +86,14 @@ public class Ustadz {
     /**
      * @return the tanggal_lahir
      */
-    public Date getTanggal_Lahir() {
+    public Date getTanggal_lahir() {
         return tanggal_lahir;
     }
 
     /**
      * @param tanggal_lahir the tanggal_lahir to set
      */
-    public void setTanggal_Lahir(Date tanggal_lahir) {
+    public void setTanggal_lahir(Date tanggal_lahir) {
         this.tanggal_lahir = tanggal_lahir;
     }
 
@@ -100,28 +114,28 @@ public class Ustadz {
     /**
      * @return the nomor_telepon
      */
-    public String getNomor_Telepon() {
+    public String getNomor_telepon() {
         return nomor_telepon;
     }
 
     /**
      * @param nomor_telepon the nomor_telepon to set
      */
-    public void setNomor_Telepon(String nomor_telepon) {
+    public void setNomor_telepon(String nomor_telepon) {
         this.nomor_telepon = nomor_telepon;
     }
 
     /**
      * @return the tanggal_bergabung
      */
-    public Date getTanggal_Bergabung() {
+    public Date getTanggal_bergabung() {
         return tanggal_bergabung;
     }
 
     /**
      * @param tanggal_bergabung the tanggal_bergabung to set
      */
-    public void setTanggal_Bergabung(Date tanggal_bergabung) {
+    public void setTanggal_bergabung(Date tanggal_bergabung) {
         this.tanggal_bergabung = tanggal_bergabung;
     }
 

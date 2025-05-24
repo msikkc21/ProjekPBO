@@ -16,33 +16,31 @@ import mvc.Model.Ustadz;
  * @author izzaa
  */
 public class DasboardUstadz extends javax.swing.JFrame {
-    private ControllerUstadz controller;
-    private int loggedInUstadzId;
+    private ControllerUstadz cbt;
+    static private int loggedInUserId;
     /**
      * Creates new form DasboardUstadz
      */
-    public DasboardUstadz(int loggedInUstadzId) { // Terima ID ustadz yang login
+     public DasboardUstadz(int loggedInUserId) { // Terima ID user yang login
         initComponents();
-        this.loggedInUstadzId = loggedInUstadzId;
-        controller = new ControllerUstadz(null, this, null); // Inisialisasi controller
-        controller.displayLoggedInUstadzData(loggedInUstadzId); // Panggil method untuk menampilkan data
+        this.loggedInUserId = loggedInUserId; // Simpan user ID
+        cbt = new ControllerUstadz(null, this, null);
+        cbt.displayLoggedInUstadzData(loggedInUserId); // Panggil method untuk menampilkan data berdasarkan user ID
 
-        // Tambahkan action listener untuk tombol Edit dan Logout
         BtnEdit.addActionListener(e -> {
-            // Saat tombol Edit diklik, panggil metode prepareEditForm dari controller
-            controller.prepareEditForm(this.loggedInUstadzId);
-            this.dispose(); // Opsional: tutup dashboard saat form edit dibuka
+            cbt.prepareEditForm(this.loggedInUserId); // Kirim USER ID ke form edit
+            this.dispose();
         });
-        BtnLogout.addActionListener(e -> controller.logout()); // Implementasikan logout di controller
+        BtnLogout.addActionListener(e -> cbt.logout());
         BtnSetoranSantri.addActionListener(e -> JOptionPane.showMessageDialog(this, "Fitur Setoran Santri akan diimplementasikan!"));
     }
     
     public void displayUstadz(Ustadz ustadz) {
         if (ustadz != null) {
             LblNama.setText(ustadz.getNama());
-            LblTanggalLahir.setText(formatDate(ustadz.getTanggal_Lahir()));
-            LblNomorTelepon.setText(ustadz.getNomor_Telepon());
-            LblTanggalBergabung.setText(formatDate(ustadz.getTanggal_Bergabung()));
+            LblTanggalLahir.setText(formatDate(ustadz.getTanggal_lahir()));
+            LblNomorTelepon.setText(ustadz.getNomor_telepon());
+            LblTanggalBergabung.setText(formatDate(ustadz.getTanggal_bergabung()));
             LblStatus.setText(ustadz.getStatus());
             LblAlamat.setText(ustadz.getAlamat());
         } else {
@@ -413,7 +411,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 // Untuk testing, gunakan ID 1 atau ID ustadz yang ada di database Anda
-                new DasboardUstadz(1).setVisible(true);
+                new DasboardUstadz(loggedInUserId).setVisible(true);
             }
         });
     }

@@ -12,9 +12,9 @@ import mvc.Utils.PasswordUtils;
 import mvc.View.Auth.FormLogin;
 import mvc.View.Auth.FormRegister;
 import mvc.View.DashboardSantri;
-//import mvc.View.DashboardUstadz;
+import mvc.View.DasboardUstadz;
 import mvc.View.FormDataSantri;
-//import mvc.View.FormDataUstadz;
+import mvc.View.FormUstadz;
 /**
  *
  * @author izzaa
@@ -55,17 +55,22 @@ public class AuthController {
         user.setPassword(hashedPassword);
         user.setRole(role);
 
-        // Simpan ke database
-        implUser.insert(user);
+        // Simpan ke database dan dapatkan ID yang baru dibuat
+        int newUserId = implUser.insert(user);
 
-        JOptionPane.showMessageDialog(frameRegister, "Registrasi berhasil! Silakan isi data diri.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-        frameRegister.dispose();
+        if (newUserId != -1) {
+            JOptionPane.showMessageDialog(frameRegister, "Registrasi berhasil! Silakan isi data diri.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            frameRegister.dispose();
 
-        // Arahkan ke form pengisian data diri
-        if (role.equals("santri")) {
-            new FormDataSantri(username).setVisible(true);
-        } else if (role.equals("ustadz")) {
-//            new FormDataUstadz(username).setVisible(true);
+            // Arahkan ke form pengisian data diri dengan membawa ID user
+            if (role.equals("santri")) {
+                new FormDataSantri(username).setVisible(true); // Jika FormDataSantri juga butuh ID, tambahkan parameternya
+            } else if (role.equals("ustadz")) {
+                // Saat membuat FormUstadz, berikan ID user yang baru diregistrasi
+                new FormUstadz(newUserId).setVisible(true); // Ini akan meneruskan user_id ke FormUstadz
+            }
+        } else {
+            JOptionPane.showMessageDialog(frameRegister, "Registrasi gagal! Terjadi kesalahan saat menyimpan data user.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -82,13 +87,13 @@ public class AuthController {
 
         if (user != null) {
             JOptionPane.showMessageDialog(frameLogin, "Login berhasil!");
-
             frameLogin.dispose();
 
             if (user.getRole().equalsIgnoreCase("santri")) {
                 new DashboardSantri(user.getUsername()).setVisible(true);
             } else if (user.getRole().equalsIgnoreCase("ustadz")) {
-//                new DashboardUstadz(user.getUsername()).setVisible(true);
+                // Setelah login, ambil ID user dan kirimkan ke DashboardUstadz
+                new DasboardUstadz(user.getId()).setVisible(true); // Ini akan meneruskan user_id ke DashboardUstadz
             }
         } else {
             JOptionPane.showMessageDialog(frameLogin, "Username atau password salah!", "Login Gagal", JOptionPane.ERROR_MESSAGE);

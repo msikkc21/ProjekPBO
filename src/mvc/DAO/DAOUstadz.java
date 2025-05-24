@@ -25,36 +25,37 @@ import java.text.SimpleDateFormat; // Import untuk format tanggal jika diperluka
 public class DAOUstadz implements IUstadz {
     Connection connection;
 
-    final String insert = "INSERT INTO ustadz (nama_ustadz, tanggal_lahir, alamat, nomor_telepon, tanggal_bergabung, status) VALUES (?, ?, ?, ?, ?, ?);";
+    final String insert = "INSERT INTO ustadz (user_id, nama_ustadz, tanggal_lahir, alamat, nomor_telepon, tanggal_bergabung, status) VALUES (?, ?, ?, ?, ?, ?, ?);"; //
     final String update = "UPDATE ustadz SET nama_ustadz=?, tanggal_lahir=?, alamat=?, nomor_telepon=?, tanggal_bergabung=?, status=? WHERE id=?;";
     final String delete = "DELETE FROM ustadz WHERE id=?;";
-    final String selectById = "SELECT * FROM ustadz WHERE id=?;"; // Perubahan: query spesifik untuk ID
-    final String selectAll = "SELECT * FROM ustadz;"; // Perubahan: query untuk semua data
+    final String selectById = "SELECT * FROM ustadz WHERE id=?;";
+    final String selectByUserId = "SELECT * FROM ustadz WHERE user_id=?;"; // <--- BARU: Query untuk mencari berdasarkan user_id
+    final String selectAll = "SELECT * FROM ustadz;";
     final String carinama = "SELECT * FROM ustadz WHERE nama_ustadz LIKE ?;";
-
+    
     public DAOUstadz() {
         connection = Koneksi.getConnection();
     }
 
     @Override
     public void insert(Ustadz u) {
-        try (PreparedStatement statement = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, u.getNama());
-            statement.setDate(2, u.getTanggal_Lahir() != null ? new java.sql.Date(u.getTanggal_Lahir().getTime()) : null);
-            statement.setString(3, u.getAlamat());
-            statement.setString(4, u.getNomor_Telepon());
-            statement.setDate(5, u.getTanggal_Bergabung() != null ? new java.sql.Date(u.getTanggal_Bergabung().getTime()) : null);
-            statement.setString(6, u.getStatus());
+        try (PreparedStatement statement = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) { // Tambahkan RETURN_GENERATED_KEYS lagi untuk ustadz_id jika auto-increment
+            statement.setInt(1, u.getUserId()); // <--- BARU: Set user_id
+            statement.setString(2, u.getNama());
+            statement.setDate(3, u.getTanggal_lahir() != null ? new java.sql.Date(u.getTanggal_lahir().getTime()) : null);
+            statement.setString(4, u.getAlamat());
+            statement.setString(5, u.getNomor_telepon());
+            statement.setDate(6, u.getTanggal_bergabung() != null ? new java.sql.Date(u.getTanggal_bergabung().getTime()) : null);
+            statement.setString(7, u.getStatus());
             statement.executeUpdate();
 
+            // Ambil ID yang dihasilkan untuk objek Ustadz itu sendiri (jika primary key ustadz auto-increment)
             ResultSet rs = statement.getGeneratedKeys();
             if (rs.next()) {
-                u.setId(rs.getInt(1));
+                u.setId(rs.getInt(1)); // Set ID Ustadz yang baru dihasilkan
             }
-            // Tidak perlu System.out.println di DAO, biarkan Controller yang menanganinya
         } catch (SQLException e) {
             Logger.getLogger(DAOUstadz.class.getName()).log(Level.SEVERE, null, e);
-            // Anda bisa melempar exception kustom di sini jika ingin error ditangani di Controller
         }
     }
 
@@ -64,10 +65,10 @@ public class DAOUstadz implements IUstadz {
             statement.setString(1, u.getNama());
             // Perbaikan: Pastikan Anda menggunakan Tanggal_Lahir untuk tanggal_lahir di update statement.
             // Di kode asli Anda, Tanggal_Bergabung digunakan untuk tanggal_lahir.
-            statement.setDate(2, u.getTanggal_Lahir() != null ? new java.sql.Date(u.getTanggal_Lahir().getTime()) : null);
+            statement.setDate(2, u.getTanggal_lahir() != null ? new java.sql.Date(u.getTanggal_lahir().getTime()) : null);
             statement.setString(3, u.getAlamat());
-            statement.setString(4, u.getNomor_Telepon());
-            statement.setDate(5, u.getTanggal_Bergabung() != null ? new java.sql.Date(u.getTanggal_Bergabung().getTime()) : null);
+            statement.setString(4, u.getNomor_telepon());
+            statement.setDate(5, u.getTanggal_bergabung() != null ? new java.sql.Date(u.getTanggal_bergabung().getTime()) : null);
             statement.setString(6, u.getStatus());
             statement.setInt(7, u.getId());
             statement.executeUpdate();
@@ -85,21 +86,21 @@ public class DAOUstadz implements IUstadz {
             Logger.getLogger(DAOUstadz.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-
-    @Override
-    public Ustadz getById(int id) { // Metode baru untuk mendapatkan satu Ustadz
+    
+    public Ustadz getByUserId(int userId) { // <--- BARU: Implementasi metode getByUserId
         Ustadz ustadz = null;
-        try (PreparedStatement statement = connection.prepareStatement(selectById)) {
-            statement.setInt(1, id); // Menggunakan setInt untuk parameter ID
+        try (PreparedStatement statement = connection.prepareStatement(selectByUserId)) {
+            statement.setInt(1, userId);
             ResultSet rs = statement.executeQuery();
-            if (rs.next()) { // Gunakan if karena kita hanya mencari satu record
+            if (rs.next()) {
                 ustadz = new Ustadz();
                 ustadz.setId(rs.getInt("id"));
+                ustadz.setUserId(rs.getInt("user_id"));
                 ustadz.setNama(rs.getString("nama_ustadz"));
-                ustadz.setTanggal_Lahir(rs.getDate("tanggal_lahir"));
+                ustadz.setTanggal_lahir(rs.getDate("tanggal_lahir"));
                 ustadz.setAlamat(rs.getString("alamat"));
-                ustadz.setNomor_Telepon(rs.getString("nomor_telepon"));
-                ustadz.setTanggal_Bergabung(rs.getDate("tanggal_bergabung"));
+                ustadz.setNomor_telepon(rs.getString("nomor_telepon"));
+                ustadz.setTanggal_bergabung(rs.getDate("tanggal_bergabung"));
                 ustadz.setStatus(rs.getString("status"));
             }
         } catch (SQLException e) {
@@ -109,18 +110,41 @@ public class DAOUstadz implements IUstadz {
     }
 
     @Override
-    public List<Ustadz> getAll() { // Metode baru untuk mendapatkan semua Ustadz
+    public Ustadz getById(int id) {
+        Ustadz ustadz = null;
+        try (PreparedStatement statement = connection.prepareStatement(selectById)) {
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                ustadz = new Ustadz();
+                ustadz.setId(rs.getInt("id"));
+                ustadz.setUserId(rs.getInt("user_id")); // <--- BARU: Ambil user_id
+                ustadz.setNama(rs.getString("nama_ustadz"));
+                ustadz.setTanggal_lahir(rs.getDate("tanggal_lahir"));
+                ustadz.setAlamat(rs.getString("alamat"));
+                ustadz.setNomor_telepon(rs.getString("nomor_telepon"));
+                ustadz.setTanggal_bergabung(rs.getDate("tanggal_bergabung"));
+                ustadz.setStatus(rs.getString("status"));
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DAOUstadz.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return ustadz;
+    }
+    
+    public List<Ustadz> getAll() { //
         List<Ustadz> list = new ArrayList<>();
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(selectAll);
             while (rs.next()) {
                 Ustadz u = new Ustadz();
                 u.setId(rs.getInt("id"));
+                u.setUserId(rs.getInt("user_id")); // <--- BARU: Ambil user_id
                 u.setNama(rs.getString("nama_ustadz"));
-                u.setTanggal_Lahir(rs.getDate("tanggal_lahir"));
+                u.setTanggal_lahir(rs.getDate("tanggal_lahir"));
                 u.setAlamat(rs.getString("alamat"));
-                u.setNomor_Telepon(rs.getString("nomor_telepon"));
-                u.setTanggal_Bergabung(rs.getDate("tanggal_bergabung"));
+                u.setNomor_telepon(rs.getString("nomor_telepon"));
+                u.setTanggal_bergabung(rs.getDate("tanggal_bergabung"));
                 u.setStatus(rs.getString("status"));
                 list.add(u);
             }
@@ -131,7 +155,7 @@ public class DAOUstadz implements IUstadz {
     }
 
     @Override
-    public List<Ustadz> getCariNama(String nama) {
+    public List<Ustadz> getCariNama(String nama) { //
         List<Ustadz> list = new ArrayList<>();
         try (PreparedStatement st = connection.prepareStatement(carinama)) {
             st.setString(1, "%" + nama + "%");
@@ -139,11 +163,12 @@ public class DAOUstadz implements IUstadz {
             while (rs.next()) {
                 Ustadz u = new Ustadz();
                 u.setId(rs.getInt("id"));
+                u.setUserId(rs.getInt("user_id")); // <--- BARU: Ambil user_id
                 u.setNama(rs.getString("nama_ustadz"));
-                u.setTanggal_Lahir(rs.getDate("tanggal_lahir"));
+                u.setTanggal_lahir(rs.getDate("tanggal_lahir"));
                 u.setAlamat(rs.getString("alamat"));
-                u.setNomor_Telepon(rs.getString("nomor_telepon"));
-                u.setTanggal_Bergabung(rs.getDate("tanggal_bergabung"));
+                u.setNomor_telepon(rs.getString("nomor_telepon"));
+                u.setTanggal_bergabung(rs.getDate("tanggal_bergabung"));
                 u.setStatus(rs.getString("status"));
                 list.add(u);
             }

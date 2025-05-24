@@ -14,6 +14,7 @@ public interface IUstadz {
     public void update(Ustadz u);
     public void delete(int id);
     public Ustadz getById(int id);
+    public Ustadz getByUserId(int userId);
     public List<Ustadz> getAll();
     public List<Ustadz> getCariNama(String nama);
 }

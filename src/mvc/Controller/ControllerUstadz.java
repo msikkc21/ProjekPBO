@@ -8,6 +8,7 @@ import mvc.DAOInterface.IUstadz;
 import mvc.Model.Ustadz;
 import mvc.Model.TabelModelUstadz; // Pastikan ini TabelModelUstadz, bukan TableModelUstadz
 import mvc.View.FormUstadz;
+import mvc.View.Auth.FormLogin;
 import mvc.View.DasboardUstadz;
 import mvc.View.EditDashboardUstadz;
 import java.util.List;
@@ -44,19 +45,20 @@ public class ControllerUstadz {
                 return;
             }
 
-            Ustadz u = formUstadzView.getUstadzDataFromForm();
+            Ustadz u = formUstadzView.getUstadzDataFromForm(); // Objek 'u' sudah memiliki userId dari form
             if (u != null) {
-                implUstadz.insert(u); // Setelah insert, objek 'u' akan memiliki ID yang baru dihasilkan dari database
+                implUstadz.insert(u); // Simpan objek Ustadz, ID ustadz akan di-generate otomatis oleh DB. user_id sudah diset.
                 JOptionPane.showMessageDialog(formUstadzView, "Data Ustadz berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
                 formUstadzView.clearForm();
-                formUstadzView.dispose(); // Tutup form registrasi
+                formUstadzView.dispose();
 
-                // Buka DasboardUstadz dengan ID ustadz yang baru saja di-insert
-                if (u.getId() != null) {
-                    DasboardUstadz newDashboard = new DasboardUstadz(u.getId());
+                // Buka DasboardUstadz dengan USER ID yang baru saja di-insert
+                // Penting: Di sini kita meneruskan userId (dari tabel user)
+                if (u.getUserId() != null) { // Gunakan getUserId() karena itu yang kita pakai untuk mencari data ustadz
+                    DasboardUstadz newDashboard = new DasboardUstadz(u.getUserId()); // <--- Kirim USER ID ke Dashboard
                     newDashboard.setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Gagal mendapatkan ID Ustadz yang baru.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(formUstadzView, "Gagal mendapatkan ID User Ustadz yang baru.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
@@ -65,26 +67,35 @@ public class ControllerUstadz {
     }
 
     // --- Metode untuk DasboardUstadz (Menampilkan data ustadz yang login) ---
-    public void displayLoggedInUstadzData(int ustadzId) {
+    public void displayLoggedInUstadzData(int userId) {
         if (dashboardUstadzView != null) {
-            Ustadz ustadz = implUstadz.getById(ustadzId); // Mengambil satu Ustadz berdasarkan ID
-            dashboardUstadzView.displayUstadz(ustadz); // Memanggil metode di view untuk menampilkan
+            Ustadz ustadz = implUstadz.getByUserId(userId); // Mengambil Ustadz berdasarkan user_id
+            dashboardUstadzView.displayUstadz(ustadz);
             if (ustadz == null) {
-                JOptionPane.showMessageDialog(dashboardUstadzView, "Data Ustadz dengan ID " + ustadzId + " tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dashboardUstadzView, "Data Ustadz dengan User ID " + userId + " tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             System.out.println("DasboardUstadz view tidak diatur untuk display.");
         }
     }
+    
+    public void fillEditForm(int ustadzId) { // Menerima ID unik Ustadz dari EditDashboardUstadz
+        Ustadz ustadz = implUstadz.getById(ustadzId); // Ambil data ustadz berdasarkan ID uniknya
+        if (editUstadzView != null) {
+            editUstadzView.setUstadzDataToForm(ustadz);
+        } else {
+            JOptionPane.showMessageDialog(null, "View EditDashboardUstadz tidak disetel untuk mengisi form.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     // --- Metode untuk EditDashboardUstadz (Mengedit data ustadz) ---
-    public void prepareEditForm(int ustadzId) {
-        Ustadz ustadz = implUstadz.getById(ustadzId); // Ambil data dari DAO
+    public void prepareEditForm(int userId) { // Parameter adalah userId
+        Ustadz ustadz = implUstadz.getByUserId(userId); // Ambil data dari DAO berdasarkan user_id
         if (ustadz != null) {
-            EditDashboardUstadz editForm = new EditDashboardUstadz(ustadzId); // Buat instance form edit
-            editForm.setUstadzDataToForm(ustadz); // <-- Ini yang mengisi data ke form
-            editForm.setVisible(true); // Tampilkan form
-            // ... (opsional: tutup dashboard)
+            // Kita perlu meneruskan ID unik ustadz ke form edit jika update membutuhkan ID ustadz itu sendiri
+            EditDashboardUstadz editForm = new EditDashboardUstadz(ustadz.getId()); // Kirim ID unik ustadz
+            editForm.setUstadzDataToForm(ustadz);
+            editForm.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "Data Ustadz tidak ditemukan untuk pengeditan.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -99,19 +110,18 @@ public class ControllerUstadz {
                 return;
             }
 
-            Ustadz u = editUstadzView.getUstadzDataFromForm(); // Mengambil data dari form
-            if (u != null) { // Pastikan tidak ada error parsing tanggal
+            Ustadz u = editUstadzView.getUstadzDataFromForm(); // Objek 'u' sekarang akan memiliki userId yang terkait
+            if (u != null) {
                 implUstadz.update(u);
                 JOptionPane.showMessageDialog(editUstadzView, "Data Ustadz berhasil diperbarui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                editUstadzView.dispose(); // Tutup form edit setelah update
+                editUstadzView.dispose();
 
-                // Buka kembali dashboard dengan data yang diperbarui
-                // u.getId() harusnya sudah terisi karena ini operasi update
-                if (u.getId() != null) {
-                    DasboardUstadz newDashboard = new DasboardUstadz(u.getId());
+                // Buka kembali dashboard dengan USER ID yang benar
+                if (u.getUserId() != null) { // Sekarang u.getUserId() seharusnya memiliki nilai yang benar
+                    DasboardUstadz newDashboard = new DasboardUstadz(u.getUserId());
                     newDashboard.setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Gagal mengembalikan ke Dashboard. ID Ustadz tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Gagal mengembalikan ke Dashboard. User ID Ustadz tidak ditemukan setelah update.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
@@ -129,7 +139,7 @@ public class ControllerUstadz {
             dashboardUstadzView.dispose(); // Tutup dashboard
         }
         // Redirect ke halaman login (misalnya)
-        // new LoginForm().setVisible(true);
+        new FormLogin().setVisible(true);
     }
 
     // Metode untuk mengisi tabel (jika ada tabel di dashboard lain atau admin)
@@ -148,13 +158,11 @@ public class ControllerUstadz {
     // Metode insert (sudah di atas)
     // Metode update (sudah di atas)
 
-    public void deleteUstadz(int id) { // ID diterima sebagai parameter
+    public void deleteUstadz(int ustadzId) { // Parameter adalah ID unik ustadz
         int confirm = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data ini?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            implUstadz.delete(id);
+            implUstadz.delete(ustadzId); // Hapus berdasarkan ID unik ustadz
             JOptionPane.showMessageDialog(null, "Data Ustadz berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-            // Refresh tabel atau dashboard setelah penghapusan
-            // fillTableAllUstadz();
         }
     }
 

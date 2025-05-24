@@ -32,16 +32,18 @@ public class TabelModelUstadz extends AbstractTableModel{
             case 0:
                 return "ID";
             case 1:
-                return "Nama Ustadz";
+                return "User_Id";
             case 2:
-                return "Tanggal Lahir";
+                return "Nama Ustadz";
             case 3:
-                return "Alamat";
+                return "Tanggal Lahir";
             case 4:
-                return "Nomor Telepon";
+                return "Alamat";
             case 5:
-                return "Tanggal Bergabung";
+                return "Nomor Telepon";
             case 6:
+                return "Tanggal Bergabung";
+            case 7:
                 return "Status";
             default:
                 return null;
@@ -54,16 +56,18 @@ public class TabelModelUstadz extends AbstractTableModel{
             case 0:
                 return lu.get(row).getId();
             case 1:
-                return lu.get(row).getNama();
+                return lu.get(row).getUserId();
             case 2:
-                return lu.get(row).getTanggal_Lahir();
+                return lu.get(row).getNama();
             case 3:
-                return lu.get(row).getAlamat();
+                return lu.get(row).getTanggal_lahir();
             case 4:
-                return lu.get(row).getNomor_Telepon();
+                return lu.get(row).getAlamat();
             case 5:
-                return lu.get(row).getTanggal_Bergabung();
+                return lu.get(row).getNomor_telepon();
             case 6:
+                return lu.get(row).getTanggal_bergabung();
+            case 7:
                 return lu.get(row).getStatus();
             default:
                 return null;
