@@ -16,14 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.text.SimpleDateFormat; // Import untuk format tanggal jika diperlukan
 
 /**
  *
  * @author ASUS
  */
 public class DAOUstadz implements IUstadz {
-    Connection connection;
+    Connection con;
 
     final String insert = "INSERT INTO ustadz (user_id, nama_ustadz, tanggal_lahir, alamat, nomor_telepon, tanggal_bergabung, status) VALUES (?, ?, ?, ?, ?, ?, ?);"; //
     final String update = "UPDATE ustadz SET nama_ustadz=?, tanggal_lahir=?, alamat=?, nomor_telepon=?, tanggal_bergabung=?, status=? WHERE id=?;";
@@ -34,12 +33,12 @@ public class DAOUstadz implements IUstadz {
     final String carinama = "SELECT * FROM ustadz WHERE nama_ustadz LIKE ?;";
     
     public DAOUstadz() {
-        connection = Koneksi.getConnection();
+        con = Koneksi.getConnection();
     }
 
     @Override
     public void insert(Ustadz u) {
-        try (PreparedStatement statement = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) { // Tambahkan RETURN_GENERATED_KEYS lagi untuk ustadz_id jika auto-increment
+        try (PreparedStatement statement = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) { // Tambahkan RETURN_GENERATED_KEYS lagi untuk ustadz_id jika auto-increment
             statement.setInt(1, u.getUserId()); // <--- BARU: Set user_id
             statement.setString(2, u.getNama());
             statement.setDate(3, u.getTanggal_lahir() != null ? new java.sql.Date(u.getTanggal_lahir().getTime()) : null);
@@ -61,7 +60,7 @@ public class DAOUstadz implements IUstadz {
 
     @Override
     public void update(Ustadz u) {
-        try (PreparedStatement statement = connection.prepareStatement(update)) {
+        try (PreparedStatement statement = con.prepareStatement(update)) {
             statement.setString(1, u.getNama());
             // Perbaikan: Pastikan Anda menggunakan Tanggal_Lahir untuk tanggal_lahir di update statement.
             // Di kode asli Anda, Tanggal_Bergabung digunakan untuk tanggal_lahir.
@@ -79,7 +78,7 @@ public class DAOUstadz implements IUstadz {
 
     @Override
     public void delete(int id) {
-        try (PreparedStatement statement = connection.prepareStatement(delete)) {
+        try (PreparedStatement statement = con.prepareStatement(delete)) {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -89,7 +88,7 @@ public class DAOUstadz implements IUstadz {
     
     public Ustadz getByUserId(int userId) { // <--- BARU: Implementasi metode getByUserId
         Ustadz ustadz = null;
-        try (PreparedStatement statement = connection.prepareStatement(selectByUserId)) {
+        try (PreparedStatement statement = con.prepareStatement(selectByUserId)) {
             statement.setInt(1, userId);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -112,7 +111,7 @@ public class DAOUstadz implements IUstadz {
     @Override
     public Ustadz getById(int id) {
         Ustadz ustadz = null;
-        try (PreparedStatement statement = connection.prepareStatement(selectById)) {
+        try (PreparedStatement statement = con.prepareStatement(selectById)) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -134,7 +133,7 @@ public class DAOUstadz implements IUstadz {
     
     public List<Ustadz> getAll() { //
         List<Ustadz> list = new ArrayList<>();
-        try (Statement st = connection.createStatement()) {
+        try (Statement st = con.createStatement()) {
             ResultSet rs = st.executeQuery(selectAll);
             while (rs.next()) {
                 Ustadz u = new Ustadz();
@@ -157,7 +156,7 @@ public class DAOUstadz implements IUstadz {
     @Override
     public List<Ustadz> getCariNama(String nama) { //
         List<Ustadz> list = new ArrayList<>();
-        try (PreparedStatement st = connection.prepareStatement(carinama)) {
+        try (PreparedStatement st = con.prepareStatement(carinama)) {
             st.setString(1, "%" + nama + "%");
             ResultSet rs = st.executeQuery();
             while (rs.next()) {

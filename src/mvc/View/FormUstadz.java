@@ -20,7 +20,6 @@ import mvc.Model.Ustadz;
  */
 public class FormUstadz extends javax.swing.JFrame {
     private ControllerUstadz cbt;
-    private String username;
     private int userIdFromAuth;
     /**
      * Creates new form FormUstadz
