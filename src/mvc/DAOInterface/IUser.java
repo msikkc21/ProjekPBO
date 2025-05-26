@@ -10,4 +10,5 @@ package mvc.DAOInterface;
  */
 public class IUser {
     
+    
 }
