@@ -4,12 +4,12 @@
  */
 package mvc.Model;
 
+
 /**
  *
  * @author izzaa
  */
 public class User {
-
     /**
      * @return the id
      */
