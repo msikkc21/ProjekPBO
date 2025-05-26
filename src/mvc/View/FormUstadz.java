@@ -138,10 +138,10 @@ public class FormUstadz extends javax.swing.JFrame {
         jLabel2.setText("Alamat");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel3.setText("Tanggal Lahir");
+        jLabel3.setText("Tanggal Lahir (01-01-2001)");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel4.setText("Tanggal Bergabung");
+        jLabel4.setText("Tanggal Bergabung (01-01-2001)");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("Status");

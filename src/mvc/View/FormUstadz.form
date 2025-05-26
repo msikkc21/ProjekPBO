@@ -110,7 +110,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="12" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Tanggal Lahir"/>
+        <Property name="text" type="java.lang.String" value="Tanggal Lahir (01-01-2001)"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
@@ -118,7 +118,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="12" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Tanggal Bergabung"/>
+        <Property name="text" type="java.lang.String" value="Tanggal Bergabung (01-01-2001)"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
