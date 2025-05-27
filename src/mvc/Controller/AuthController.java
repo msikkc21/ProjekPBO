@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 import mvc.DAO.UserDAO;
 import mvc.DAOInterface.IUser;
 import mvc.Model.User;
-import mvc.Model.TabelModelUser;
+// import mvc.Model.TabelModelUser;
 import mvc.Utils.PasswordUtils;
 import mvc.View.Auth.FormLogin;
 import mvc.View.Auth.FormRegister;
