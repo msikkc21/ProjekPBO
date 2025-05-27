@@ -16,6 +16,6 @@ public interface ISetoran {
     public void update(Setoran a);
     public void delete(int id);
     public List<Setoran>getAll();
-    public List<Setoran> getCariSantri(String nama);
+    public List<Setoran> getCariSantri(int id_santri);
     
 }

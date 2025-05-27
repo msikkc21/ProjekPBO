@@ -150,6 +150,10 @@ public class Setoran {
     private String keterangan;
     private String nilai;
 
+    public void setUstadzid(mvc.DAO.Ustadz ustadz) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
  
     
 }

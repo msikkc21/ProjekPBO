@@ -31,11 +31,7 @@ public class DAOSetoran implements ISetoran {
     public DAOSetoran(){
         connection = Koneksi.getConnection();
     }
-    
-
-    
-
-
+ 
     public void insert(Setoran a) {
         PreparedStatement statement = null;
         try {
@@ -78,6 +74,7 @@ public class DAOSetoran implements ISetoran {
             statement.setInt(6, a.getHalaman());
             statement.setString(7, a.getKeterangan());
             statement.setString(8, a.getNilai());
+            statement.setInt(9, a.getId());
             statement.executeUpdate();
 
         } catch (SQLException ex){
@@ -148,9 +145,49 @@ public class DAOSetoran implements ISetoran {
         return lb;
     }
 
-    public List<Setoran> getCariSantri(String nama) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<Setoran> getCariSantri(int id_santri) {
+         List<Setoran> lb = new ArrayList<>();
+    String query = "SELECT * FROM setoran WHERE santri_id = ?";
+    try (PreparedStatement statement = connection.prepareStatement(query)) {
+        statement.setInt(1, id_santri);
+        ResultSet rs = statement.executeQuery();
+        while (rs.next()) {
+            Setoran a = new Setoran();
+            a.setId(rs.getInt("id"));
+
+            Santri santri = new Santri();
+            santri.setId(rs.getInt("santri_id"));
+            a.setSantriid(santri);
+
+            Ustadz ustadz = new Ustadz();
+            ustadz.setId(rs.getInt("ustadz_id"));
+            a.setUstadzid(ustadz);
+
+            a.setTanggal(rs.getDate("tanggal").toLocalDate());
+            a.setWaktu(rs.getString("waktu"));
+            a.setJuz(rs.getInt("juz"));
+            a.setHalaman(rs.getInt("halaman"));
+            a.setKeterangan(rs.getString("keterangan"));
+            a.setNilai(rs.getString("nilai"));
+
+            lb.add(a);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(DAOSetoran.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return lb;
+}
+
+    private static class Santri {
+
+        public Santri() {
+        }
+
+        private void setId(int aInt) {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+    }
+    
     
     
 }
