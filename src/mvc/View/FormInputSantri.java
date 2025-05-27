@@ -19,7 +19,7 @@ import mvc.Model.Santri;
  */
 public class FormInputSantri extends javax.swing.JFrame {
     private SantriController controller;
-    
+    private int userIdFromAuth;
 
     /**
      * Creates new form FormInputSantri
@@ -31,21 +31,32 @@ public class FormInputSantri extends javax.swing.JFrame {
         clearForm();
     }
     
+    public FormInputSantri(int userId) { // Konstruktor yang menerima ID user
+        initComponents();
+        this.userIdFromAuth = userId; // Simpan ID user di sini
+        controller = new SantriController(null, this, null);
+        BtnSave.addActionListener(e -> controller.insertSantriAndShowDashboard());
+        clearForm();
+        System.out.println("Form Santri dibuka untuk User ID: " + userId);
+    }
+    
     public Santri getSantriDataFromForm() {
         Santri santri = new Santri();
         // ID tidak diset di sini karena akan dihasilkan oleh database
-        santri.setNama_santri(txtNama.getText());
+        santri.setNama_santri(getTxtNama().getText());
+        santri.setUser_id(userIdFromAuth);
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sesuaikan format dengan input
-            santri.setTanggal_lahir(sdf.parse(txtTanggalLahir.getText()));
-            santri.setTanggal_masuk(sdf.parse(txtTanggalMasuk.getText()));
+            santri.setTanggal_lahir(sdf.parse(getTxtTanggalLahir().getText()));
+            santri.setTanggal_masuk(sdf.parse(getTxtTanggalMasuk().getText()));
         } catch (java.text.ParseException e) {
             JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY.", "Error Tanggal", JOptionPane.ERROR_MESSAGE);
             return null; // Kembalikan null jika ada error parsing tanggal
         }
-        santri.setAlamat(txtAlamat.getText());
-        santri.setNomor_telepon(txtNomorTlp.getText()); // Perhatikan getTxtNomorTelepon()
-        santri.setStatus(setStatus.getSelectedItem().toString());
+        santri.setAlamat(getTxtAlamat().getText());
+        santri.setNama_wali(getTxtNamaWali().getText());
+        santri.setNomor_telepon(getTxtNomorTlp().getText()); // Perhatikan getTxtNomorTelepon()
+        santri.setStatus(getSetStatus().getSelectedItem().toString());
         return santri;
     }
 
@@ -183,7 +194,7 @@ public class FormInputSantri extends javax.swing.JFrame {
 
         jLabel9.setText("Alamat");
 
-        setStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", " " }));
+        setStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aktif", "Tidak aktif", "Alumni" }));
         setStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setStatusActionPerformed(evt);
@@ -351,56 +362,56 @@ public class FormInputSantri extends javax.swing.JFrame {
     /**
      * @return the BtnSave
      */
-    public javax.swing.JButton getBtnSave() {
+    public JButton getBtnSave() {
         return BtnSave;
     }
 
     /**
      * @return the jComboBox1
      */
-    public javax.swing.JComboBox<String> getSetStatus() {
+    public JComboBox<String> getSetStatus() {
         return setStatus;
     }
 
     /**
      * @return the txtAlamat
      */
-    public javax.swing.JTextField getTxtAlamat() {
+    public JTextField getTxtAlamat() {
         return txtAlamat;
     }
 
     /**
      * @return the txtNama
      */
-    public javax.swing.JTextField getTxtNama() {
+    public JTextField getTxtNama() {
         return txtNama;
     }
 
     /**
      * @return the txtNamaWali
      */
-    public javax.swing.JTextField getTxtNamaWali() {
+    public JTextField getTxtNamaWali() {
         return txtNamaWali;
     }
 
     /**
      * @return the txtNomorTlp
      */
-    public javax.swing.JTextField getTxtNomorTlp() {
+    public JTextField getTxtNomorTlp() {
         return txtNomorTlp;
     }
 
     /**
      * @return the txtTanggalLahir
      */
-    public javax.swing.JTextField getTxtTanggalLahir() {
+    public JTextField getTxtTanggalLahir() {
         return txtTanggalLahir;
     }
 
     /**
      * @return the txtTanggalMasuk
      */
-    public javax.swing.JTextField getTxtTanggalMasuk() {
+    public JTextField getTxtTanggalMasuk() {
         return txtTanggalMasuk;
     }
 }

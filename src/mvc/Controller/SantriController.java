@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import java.util.Date; // Penting untuk Date object
 import java.text.SimpleDateFormat; // Untuk memformat dan mengurai tanggal
+import mvc.View.Auth.FormLogin;
 
 /**
  *
@@ -53,7 +54,7 @@ public class SantriController {
                 
                 // Buka DasboardUstadz dengan ID ustadz yang baru saja di-insert
                 if(s.getId() !=null){
-                    FormDashSantri newframeView = new FormDashSantri(s.getId());
+                    FormDashSantri newframeView = new FormDashSantri(s.getUser_id());
                     newframeView.setVisible(true);       
                 }else{
                     JOptionPane.showMessageDialog(null,"Gagal mendapatkan ID Santri yang baru.", "Error", JOptionPane.ERROR_MESSAGE);                  
@@ -79,7 +80,7 @@ public class SantriController {
 
     // --- Metode untuk EditFormview (Mengedit data santri) ---
     public void prepareEditForm(int userId) {
-        Santri santri = implSantri.getById(userId); // Ambil data dari DAO
+        Santri santri = implSantri.getByUserId(userId); // Ambil data dari DAO
         if (santri != null) {
             FormEditSantri editForm = new FormEditSantri(userId); // Buat instance form edit
             editForm.setSantriDataToForm(santri); // <-- Ini yang mengisi data ke form
@@ -129,7 +130,7 @@ public class SantriController {
             frameView.dispose(); // Tutup dashboard
         }
         // Redirect ke halaman login (misalnya)
-        // new LoginForm().setVisible(true);
+        new FormLogin().setVisible(true);
     }
 
     // Metode untuk mengisi tabel (jika ada tabel di dashboard lain atau admin)
@@ -158,8 +159,8 @@ public class SantriController {
         }
     }
 
-    public void searchSantriBySetoran(String setoran) {
-        List<Setoran> listSetoran = implSantri.getAllSetoran(); // Panggil metode yang benar
+//    public void searchSantriBySetoran(String setoran) {
+//        List<Setoran> listSetoran = implSantri.getAllSetoran(); // Panggil metode yang benar
     
     // Anda kemungkinan besar memerlukan TableModel baru untuk Setoran
     // Misalnya: TableModelSetoran tms = new TableModelSetoran(listSetoran);
@@ -171,6 +172,4 @@ public class SantriController {
     // kemungkinan besar tidak relevan lagi di sini.
     // listSantri = implSantri.getCari(); // Hapus baris ini
     // TableModelSantri tmu = new TableModelSantri(listSantri); // Hapus baris ini
-}
-
 }

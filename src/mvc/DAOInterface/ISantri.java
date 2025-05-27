@@ -17,5 +17,5 @@ public interface ISantri {
     public Santri getById(int id);
     public Santri getByUserId(int userId);
     public List<Santri> getAll();
-    public List<Setoran> getAllSetoran();
+//    public List<Setoran> getAllSetoran();
 }

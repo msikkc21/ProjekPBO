@@ -43,12 +43,13 @@ public class FormEditSantri extends javax.swing.JFrame {
         if (santri != null) {
             // Kita tidak punya TxtID di sini, jadi kita simpan di field `ustadzIdToEdit`
             // TxtID.setText(ustadz.getId().toString()); // Jika Anda punya TxtID tersembunyi
-            txtNama.setText(santri.getNama_santri());
-            txtTanggalLahir.setText(formatDate(santri.getTanggal_lahir())); // Format tanggal
-            txtNomorTlp.setText(santri.getNomor_telepon());
-            txtTanggalMasuk.setText(formatDate(santri.getTanggal_masuk())); // Format tanggal
-            txtAlamat.setText(santri.getAlamat());
-            setStatus.setSelectedItem(santri.getStatus());
+            getTxtNama().setText(santri.getNama_santri());
+            getTxtTanggalLahir().setText(formatDate(santri.getTanggal_lahir())); // Format tanggal
+            getTxtNomorTlp().setText(santri.getNomor_telepon());
+            getTxtTanggalMasuk().setText(formatDate(santri.getTanggal_masuk())); // Format tanggal
+            getTxtAlamat().setText(santri.getAlamat());
+            getTxtNamaWali().setText(santri.getNama_wali());
+            getSetStatus().setSelectedItem(santri.getStatus());
         } else {
             JOptionPane.showMessageDialog(this, "Data Ustadz tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose(); // Tutup form jika data tidak ditemukan
@@ -59,6 +60,7 @@ public class FormEditSantri extends javax.swing.JFrame {
         Santri santri = new Santri();
         santri.setId(this.santriIdToEdit); // Set ID dari field yang disimpan
         santri.setNama_santri(txtNama.getText());
+        santri.setNama_wali(getTxtNamaWali().getText());
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sesuaikan format dengan input
             santri.setTanggal_lahir(sdf.parse(txtTanggalLahir.getText()));
@@ -139,7 +141,7 @@ public class FormEditSantri extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("FORM DATA  DIRI");
+        jLabel2.setText("FORM DATA DIRI");
 
         jPanel2.setBackground(new java.awt.Color(204, 0, 0));
 
@@ -161,15 +163,15 @@ public class FormEditSantri extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(74, 74, 74)
-                        .addComponent(jLabel1))
+                        .addGap(16, 16, 16)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
+                        .addGap(56, 56, 56)
                         .addComponent(jLabel2))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(69, Short.MAX_VALUE))
+                        .addGap(76, 76, 76)
+                        .addComponent(jLabel1)))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,7 +181,7 @@ public class FormEditSantri extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addGap(184, 184, 184))
+                .addGap(273, 273, 273))
         );
 
         jLabel5.setText("Nomor Telepon");
@@ -204,7 +206,7 @@ public class FormEditSantri extends javax.swing.JFrame {
             }
         });
 
-        setStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", " " }));
+        setStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aktif", "Tidak aktif", "Alumni" }));
         setStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setStatusActionPerformed(evt);
@@ -258,7 +260,7 @@ public class FormEditSantri extends javax.swing.JFrame {
                         .addComponent(BtnBack)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(BtnUpdate)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -291,12 +293,12 @@ public class FormEditSantri extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(txtAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BtnUpdate)
-                    .addComponent(BtnBack))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(BtnBack)
+                    .addComponent(BtnUpdate))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         pack();
@@ -387,71 +389,67 @@ public class FormEditSantri extends javax.swing.JFrame {
     private javax.swing.JTextField txtTanggalLahir;
     private javax.swing.JTextField txtTanggalMasuk;
     // End of variables declaration//GEN-END:variables
-
-    private Object FormInputSantri(int santriId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
     
     /**
      * @return the BtnUpdate
      */
-    public javax.swing.JButton getBtnUpdate() {
+    public JButton getBtnUpdate() {
         return BtnUpdate;
     }
 
     /**
      * @return the jComboBox1
      */
-    public javax.swing.JComboBox<String> getSetStatus() {
+    public JComboBox<String> getSetStatus() {
         return setStatus;
     }
 
     /**
      * @return the txtAlamat
      */
-    public javax.swing.JTextField getTxtAlamat() {
+    public JTextField getTxtAlamat() {
         return txtAlamat;
     }
 
     /**
      * @return the txtNama
      */
-    public javax.swing.JTextField getTxtNama() {
+    public JTextField getTxtNama() {
         return txtNama;
     }
 
     /**
      * @return the txtNamaWali
      */
-    public javax.swing.JTextField getTxtNamaWali() {
+    public JTextField getTxtNamaWali() {
         return txtNamaWali;
     }
 
     /**
      * @return the txtNomorTlp
      */
-    public javax.swing.JTextField getTxtNomorTlp() {
+    public JTextField getTxtNomorTlp() {
         return txtNomorTlp;
     }
 
     /**
      * @return the txtTanggalLahir
      */
-    public javax.swing.JTextField getTxtTanggalLahir() {
+    public JTextField getTxtTanggalLahir() {
         return txtTanggalLahir;
     }
 
     /**
      * @return the txtTanggalMasuk
      */
-    public javax.swing.JTextField getTxtTanggalMasuk() {
+    public JTextField getTxtTanggalMasuk() {
         return txtTanggalMasuk;
     }
 
     /**
      * @return the BtnBack
      */
-    public javax.swing.JButton getBtnBack() {
+    public JButton getBtnBack() {
         return BtnBack;
     }
 

@@ -11,8 +11,10 @@ import java.util.Date;
  * @author User
  */
 public class Santri {
-   private Integer id;
+
+    private Integer id;
     private String nama_santri;
+    private Integer user_id; 
     private Date tanggal_lahir;
     private String alamat;
     private String nomor_telepon;
@@ -46,6 +48,21 @@ public class Santri {
      */
     public void setNama_santri(String nama_santri) {
         this.nama_santri = nama_santri;
+    }
+    
+    
+    /**
+     * @return the user_id
+     */
+    public Integer getUser_id() {
+        return user_id;
+    }
+
+    /**
+     * @param user_id the user_id to set
+     */
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
     }
 
     /**

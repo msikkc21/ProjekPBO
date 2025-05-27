@@ -11,9 +11,9 @@ import mvc.Model.TabelModelUser;
 import mvc.Utils.PasswordUtils;
 import mvc.View.Auth.FormLogin;
 import mvc.View.Auth.FormRegister;
-import mvc.View.DashboardSantri;
 import mvc.View.DasboardUstadz;
-import mvc.View.FormDataSantri;
+import mvc.View.FormDashSantri;
+import mvc.View.FormInputSantri;
 import mvc.View.FormUstadz;
 /**
  *
@@ -64,7 +64,7 @@ public class AuthController {
 
             // Arahkan ke form pengisian data diri dengan membawa ID user
             if (role.equals("santri")) {
-                new FormDataSantri(username).setVisible(true); // Jika FormDataSantri juga butuh ID, tambahkan parameternya
+                new FormInputSantri(newUserId).setVisible(true); // Jika FormDataSantri juga butuh ID, tambahkan parameternya
             } else if (role.equals("ustadz")) {
                 // Saat membuat FormUstadz, berikan ID user yang baru diregistrasi
                 new FormUstadz(newUserId).setVisible(true); // Ini akan meneruskan user_id ke FormUstadz
@@ -90,7 +90,7 @@ public class AuthController {
             frameLogin.dispose();
 
             if (user.getRole().equalsIgnoreCase("santri")) {
-                new DashboardSantri(user.getUsername()).setVisible(true);
+                new FormDashSantri(user.getId()).setVisible(true);
             } else if (user.getRole().equalsIgnoreCase("ustadz")) {
                 // Setelah login, ambil ID user dan kirimkan ke DashboardUstadz
                 new DasboardUstadz(user.getId()).setVisible(true); // Ini akan meneruskan user_id ke DashboardUstadz

@@ -25,11 +25,11 @@ import java.text.SimpleDateFormat;
 public class SantriDAO implements ISantri{
     Connection con;
     
-    final String insert = "INSERT INTO tblsantri (nama_santri, tanggal_lahir, alamat, nomor_ttelepon, nama_wali, tanggal_masuk, status) VALUES (?, ?, ?, ?, ?, ?, ?);";
-    final String update = "UPDATE tblsantri set nama_santri=?, tanggal_lahir=?, alamat=?, nomor_telepon=?, nama_wali=?, tanggal_masuk=?, status? where is=?;";
-    final String delete = "DELETE FROM tblsantri where id=?;";
-    final String selectById = "SELECT FROM santri WHERE id=?;";
-    final String selectByUserId = "SELECT FROM santri WHERE user_id=?;";
+    final String insert = "INSERT INTO santri (user_id, nama_santri, tanggal_lahir, alamat, nomor_telepon, nama_wali, tanggal_masuk, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    final String update = "UPDATE santri set nama_santri=?, tanggal_lahir=?, alamat=?, nomor_telepon=?, nama_wali=?, tanggal_masuk=?, status=? WHERE user_id=?;";
+    final String delete = "DELETE FROM santri where id=?;";
+    final String selectById = "SELECT * FROM santri WHERE id=?;";
+    final String selectByUserId = "SELECT * FROM santri WHERE user_id=?;";
     final String select = "SELECT * FROM santri;";
     
     public SantriDAO (){
@@ -38,13 +38,14 @@ public class SantriDAO implements ISantri{
     
     public void insert(Santri s){
         try(PreparedStatement statement = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)){
-            statement.setString(1, s.getNama_santri());
-            statement.setDate(2, s.getTanggal_lahir ()!= null ? new java.sql.Date(s.getTanggal_lahir().getTime()) : null);
-            statement.setString(3, s.getAlamat());
-            statement.setString(4, s.getNomor_telepon());
-            statement.setString(5, s.getNama_wali());
-            statement.setDate(6, s.getTanggal_masuk()!= null ? new java.sql.Date(s.getTanggal_masuk().getTime()) : null);
-            statement.setString (7, s.getStatus());
+            statement.setInt(1, s.getUser_id());
+            statement.setString(2, s.getNama_santri());
+            statement.setDate(3, s.getTanggal_lahir ()!= null ? new java.sql.Date(s.getTanggal_lahir().getTime()) : null);
+            statement.setString(4, s.getAlamat());
+            statement.setString(5, s.getNomor_telepon());
+            statement.setString(6, s.getNama_wali());
+            statement.setDate(7, s.getTanggal_masuk()!= null ? new java.sql.Date(s.getTanggal_masuk().getTime()) : null);
+            statement.setString (8, s.getStatus());
             statement.executeUpdate();
             
             ResultSet rs = statement.getGeneratedKeys();
@@ -67,6 +68,7 @@ public class SantriDAO implements ISantri{
             statement.setString(5, s.getNama_wali());
             statement.setDate(6, s.getTanggal_masuk() != null ? new java.sql.Date(s.getTanggal_masuk().getTime()) : null);
             statement.setString (7, s.getStatus());
+            statement.setInt(8, s.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, null, e);
@@ -114,6 +116,7 @@ public class SantriDAO implements ISantri{
             if (rs.next()) {
                 santri = new Santri();
                 santri.setId(rs.getInt("id"));
+                santri.setUser_id(rs.getInt("user_id"));
                 santri.setNama_santri(rs.getString("nama_santri"));
                 santri.setTanggal_lahir(rs.getDate("tanggal_lahir"));
                 santri.setAlamat(rs.getString("alamat"));
@@ -157,112 +160,112 @@ public class SantriDAO implements ISantri{
     // Di dalam file SantriDAO.java
 // ... (bagian atas kelas) ...
 
-@Override
-public List<Setoran> getAllSetoran() {
-    List<Setoran> listSetoran = new ArrayList<>();
-    PreparedStatement statement = null;
-    ResultSet rs = null;
-    try {
-        // Asumsi ada tabel 'tblsetoran' di database Anda
-        // Dan Anda memiliki kelas model 'Setoran' di package mvc.Model
-        String selectAllSetoran = "SELECT * FROM tblsetoran"; // Sesuaikan nama tabel setoran Anda
-        statement = con.prepareStatement(selectAllSetoran);
-        rs = statement.executeQuery();
-
-        while (rs.next()) {
-            Setoran setoran = new Setoran();
-            // Sesuaikan dengan nama kolom di tabel 'tblsetoran' Anda
-            setoran.setId(rs.getInt("id_setoran")); // Contoh: id_setoran (primary key setoran)
-            setoran.setTanggal(rs.getDate("tanggal_setoran")); // Contoh: tanggal_setoran
-            setoran.setJumlah(rs.getDouble("jumlah_setoran")); // Contoh: jumlah_setoran
-            setoran.setSantriId(rs.getInt("santri_id")); // Contoh: foreign key ke ID santri
-
-            listSetoran.add(setoran);
-        }
-    } catch (SQLException ex) {
-        Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error while fetching all setoran", ex);
-    } finally {
-        try {
-            if (rs != null) rs.close();
-            if (statement != null) statement.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error closing resources", ex);
-        }
-    }
-    return listSetoran;
+//@Override
+//public List<Setoran> getAllSetoran() {
+//    List<Setoran> listSetoran = new ArrayList<>();
+//    PreparedStatement statement = null;
+//    ResultSet rs = null;
+//    try {
+//        // Asumsi ada tabel 'tblsetoran' di database Anda
+//        // Dan Anda memiliki kelas model 'Setoran' di package mvc.Model
+//        String selectAllSetoran = "SELECT * FROM tblsetoran"; // Sesuaikan nama tabel setoran Anda
+//        statement = con.prepareStatement(selectAllSetoran);
+//        rs = statement.executeQuery();
+//
+//        while (rs.next()) {
+//            Setoran setoran = new Setoran();
+//            // Sesuaikan dengan nama kolom di tabel 'tblsetoran' Anda
+//            setoran.setId(rs.getInt("id_setoran")); // Contoh: id_setoran (primary key setoran)
+//            setoran.setTanggal(rs.getDate("tanggal_setoran")); // Contoh: tanggal_setoran
+//            setoran.setJumlah(rs.getDouble("jumlah_setoran")); // Contoh: jumlah_setoran
+//            setoran.setSantriId(rs.getInt("santri_id")); // Contoh: foreign key ke ID santri
+//
+//            listSetoran.add(setoran);
+//        }
+//    } catch (SQLException ex) {
+//        Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error while fetching all setoran", ex);
+//    } finally {
+//        try {
+//            if (rs != null) rs.close();
+//            if (statement != null) statement.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error closing resources", ex);
+//        }
+//    }
+//    return listSetoran;
+//}
+//
+//// Di dalam file SantriDAO.java
+//// ... (bagian atas kelas) ...
+//
+//@Override
+//public List<Setoran> getAllSetoran() {
+//    List<Setoran> listSetoran = new ArrayList<>();
+//    PreparedStatement statement = null;
+//    ResultSet rs = null;
+//    try {
+//        // Asumsi ada tabel 'tblsetoran' di database Anda
+//        // Dan Anda memiliki kelas model 'Setoran' di package mvc.Model
+//        String selectAllSetoran = "SELECT * FROM tblsetoran"; // Sesuaikan nama tabel setoran Anda
+//        statement = con.prepareStatement(selectAllSetoran);
+//        rs = statement.executeQuery();
+//
+//        while (rs.next()) {
+//            Setoran setoran = new Setoran();
+//            // Sesuaikan dengan nama kolom di tabel 'tblsetoran' Anda
+//            setoran.setId(rs.getInt("id_setoran")); // Contoh: id_setoran (primary key setoran)
+//            setoran.setTanggal(rs.getDate("tanggal_setoran")); // Contoh: tanggal_setoran
+//            setoran.setJumlah(rs.getDouble("jumlah_setoran")); // Contoh: jumlah_setoran
+//            setoran.setSantriId(rs.getInt("santri_id")); // Contoh: foreign key ke ID santri
+//
+//            listSetoran.add(setoran);
+//        }
+//    } catch (SQLException ex) {
+//        Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error while fetching all setoran", ex);
+//    } finally {
+//        try {
+//            if (rs != null) rs.close();
+//            if (statement != null) statement.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error closing resources", ex);
+//        }
+//    }
+//    return listSetoran;
+//}
+//
+//@Override
+//public List<Setoran> getAllSetoran() {
+//    List<Setoran> listSetoran = new ArrayList<>();
+//    PreparedStatement statement = null;
+//    ResultSet rs = null;
+//    try {
+//        // Asumsi ada tabel 'tblsetoran' di database Anda
+//        // Dan Anda memiliki kelas model 'Setoran' di package mvc.Model
+//        String selectAllSetoran = "SELECT * FROM tblsetoran"; // Sesuaikan nama tabel setoran Anda
+//        statement = con.prepareStatement(selectAllSetoran);
+//        rs = statement.executeQuery();
+//
+//        while (rs.next()) {
+//            Setoran setoran = new Setoran();
+//            // Sesuaikan dengan nama kolom di tabel 'tblsetoran' Anda
+//            setoran.setId(rs.getInt("id_setoran")); // Contoh: id_setoran (primary key setoran)
+//            setoran.setTanggal(rs.getDate("tanggal_setoran")); // Contoh: tanggal_setoran
+//            setoran.setJumlah(rs.getDouble("jumlah_setoran")); // Contoh: jumlah_setoran
+//            setoran.setSantriId(rs.getInt("santri_id")); // Contoh: foreign key ke ID santri
+//
+//            listSetoran.add(setoran);
+//        }
+//    } catch (SQLException ex) {
+//        Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error while fetching all setoran", ex);
+//    } finally {
+//        try {
+//            if (rs != null) rs.close();
+//            if (statement != null) statement.close();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error closing resources", ex);
+//        }
+//    }
+//    return listSetoran;
+//}
 }
 
-// Di dalam file SantriDAO.java
-// ... (bagian atas kelas) ...
-
-@Override
-public List<Setoran> getAllSetoran() {
-    List<Setoran> listSetoran = new ArrayList<>();
-    PreparedStatement statement = null;
-    ResultSet rs = null;
-    try {
-        // Asumsi ada tabel 'tblsetoran' di database Anda
-        // Dan Anda memiliki kelas model 'Setoran' di package mvc.Model
-        String selectAllSetoran = "SELECT * FROM tblsetoran"; // Sesuaikan nama tabel setoran Anda
-        statement = con.prepareStatement(selectAllSetoran);
-        rs = statement.executeQuery();
-
-        while (rs.next()) {
-            Setoran setoran = new Setoran();
-            // Sesuaikan dengan nama kolom di tabel 'tblsetoran' Anda
-            setoran.setId(rs.getInt("id_setoran")); // Contoh: id_setoran (primary key setoran)
-            setoran.setTanggal(rs.getDate("tanggal_setoran")); // Contoh: tanggal_setoran
-            setoran.setJumlah(rs.getDouble("jumlah_setoran")); // Contoh: jumlah_setoran
-            setoran.setSantriId(rs.getInt("santri_id")); // Contoh: foreign key ke ID santri
-
-            listSetoran.add(setoran);
-        }
-    } catch (SQLException ex) {
-        Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error while fetching all setoran", ex);
-    } finally {
-        try {
-            if (rs != null) rs.close();
-            if (statement != null) statement.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error closing resources", ex);
-        }
-    }
-    return listSetoran;
-}
-
-@Override
-public List<Setoran> getAllSetoran() {
-    List<Setoran> listSetoran = new ArrayList<>();
-    PreparedStatement statement = null;
-    ResultSet rs = null;
-    try {
-        // Asumsi ada tabel 'tblsetoran' di database Anda
-        // Dan Anda memiliki kelas model 'Setoran' di package mvc.Model
-        String selectAllSetoran = "SELECT * FROM tblsetoran"; // Sesuaikan nama tabel setoran Anda
-        statement = con.prepareStatement(selectAllSetoran);
-        rs = statement.executeQuery();
-
-        while (rs.next()) {
-            Setoran setoran = new Setoran();
-            // Sesuaikan dengan nama kolom di tabel 'tblsetoran' Anda
-            setoran.setId(rs.getInt("id_setoran")); // Contoh: id_setoran (primary key setoran)
-            setoran.setTanggal(rs.getDate("tanggal_setoran")); // Contoh: tanggal_setoran
-            setoran.setJumlah(rs.getDouble("jumlah_setoran")); // Contoh: jumlah_setoran
-            setoran.setSantriId(rs.getInt("santri_id")); // Contoh: foreign key ke ID santri
-
-            listSetoran.add(setoran);
-        }
-    } catch (SQLException ex) {
-        Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error while fetching all setoran", ex);
-    } finally {
-        try {
-            if (rs != null) rs.close();
-            if (statement != null) statement.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(SantriDAO.class.getName()).log(Level.SEVERE, "Error closing resources", ex);
-        }
-    }
-    return listSetoran;
-}
-
-}
