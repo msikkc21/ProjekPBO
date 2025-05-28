@@ -24,6 +24,7 @@ public class FormRegister extends javax.swing.JFrame {
     
     public FormRegister() {
         initComponents();
+        setLocationRelativeTo(null);
         cbt = new AuthController(null, this);
     }
     

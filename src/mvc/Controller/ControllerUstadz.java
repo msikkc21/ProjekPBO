@@ -143,10 +143,16 @@ public class ControllerUstadz {
         new FormLogin().setVisible(true);
     }
     
-    public void showSetoran(int id){
+    public void showSetoran(int id) {
         Ustadz u = implUstadz.getByUserId(id);
-        dashboardUstadzView.dispose();
-        new FormSetoran(u.getId()).setVisible(true);
+        if (dashboardUstadzView != null) {
+            dashboardUstadzView.dispose();
+        }
+        if (u != null) {
+            new FormSetoran(u.getId()).setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Data Ustadz tidak ditemukan untuk membuka Form Setoran.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     // Metode untuk mengisi tabel (jika ada tabel di dashboard lain atau admin)

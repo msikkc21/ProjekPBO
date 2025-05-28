@@ -4,8 +4,7 @@
  */
 package mvc.Model;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.util.Date; // Tetap gunakan java.util.Date
 
 /**
  *
@@ -114,14 +113,14 @@ public class Setoran {
     /**
      * @return the tanggal
      */
-    public Date getTanggal() {
+    public Date getTanggal() { // Tetap Date
         return tanggal;
     }
 
     /**
      * @param tanggal the tanggal to set
      */
-    public void setTanggal(Date tanggal) {
+    public void setTanggal(Date tanggal) { // Tetap Date
         this.tanggal = tanggal;
     }
 
@@ -136,9 +135,6 @@ public class Setoran {
      * @param waktu the waktu to set
      */
     public void setWaktu(String waktu) {
-        if (!waktu.equalsIgnoreCase("Pagi") && !waktu.equalsIgnoreCase("Sore")) {
-            throw new IllegalArgumentException("Waktu hanya boleh 'Pagi' atau 'Sore'");
-    }
         this.waktu = waktu;
     }
     private Integer id;
@@ -150,5 +146,5 @@ public class Setoran {
     private Integer halaman;
     private String keterangan;
     private String nilai;
-    
+
 }

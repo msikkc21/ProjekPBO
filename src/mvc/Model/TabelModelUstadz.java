@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package mvc.Model;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 /**
@@ -11,6 +12,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class TabelModelUstadz extends AbstractTableModel{
     List<Ustadz> lu;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public TabelModelUstadz(List<Ustadz> lu){
         this.lu = lu;
@@ -18,7 +20,7 @@ public class TabelModelUstadz extends AbstractTableModel{
 
     @Override
     public int getColumnCount(){
-        return 7;
+        return 8; // Perbaikan: Ubah dari 7 menjadi 8 karena ada kolom User_Id
     }
 
     @Override
@@ -60,13 +62,15 @@ public class TabelModelUstadz extends AbstractTableModel{
             case 2:
                 return lu.get(row).getNama();
             case 3:
-                return lu.get(row).getTanggal_lahir();
+                // Format tanggal lahir
+                return lu.get(row).getTanggal_lahir() != null ? dateFormat.format(lu.get(row).getTanggal_lahir()) : "";
             case 4:
                 return lu.get(row).getAlamat();
             case 5:
                 return lu.get(row).getNomor_telepon();
             case 6:
-                return lu.get(row).getTanggal_bergabung();
+                // Format tanggal bergabung
+                return lu.get(row).getTanggal_bergabung() != null ? dateFormat.format(lu.get(row).getTanggal_bergabung()) : "";
             case 7:
                 return lu.get(row).getStatus();
             default:

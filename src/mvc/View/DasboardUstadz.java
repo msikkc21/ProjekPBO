@@ -23,6 +23,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
      */
      public DasboardUstadz(int loggedInUserId) { // Terima ID user yang login
         initComponents();
+        setLocationRelativeTo(null);
         this.loggedInUserId = loggedInUserId; // Simpan user ID
         cbt = new ControllerUstadz(null, this, null);
         cbt.displayLoggedInUstadzData(loggedInUserId); // Panggil method untuk menampilkan data berdasarkan user ID
@@ -58,7 +59,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
         if (date == null) {
             return "-";
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // UBAH FORMAT DI SINI
         return sdf.format(date);
     }
     

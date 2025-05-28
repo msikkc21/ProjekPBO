@@ -22,6 +22,7 @@ public class FormLogin extends javax.swing.JFrame {
     
     public FormLogin() {
         initComponents();
+        setLocationRelativeTo(null);
         cbt = new AuthController(this, null);
     }
     

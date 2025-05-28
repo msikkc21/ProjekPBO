@@ -6,6 +6,7 @@ package mvc.DAOInterface;
 
 import java.util.List;
 import mvc.Model.Santri;
+import mvc.Model.Setoran;
 /**
  *
  * @author User
@@ -17,5 +18,6 @@ public interface ISantri {
     public Santri getById(int id);
     public Santri getByUserId(int userId);
     public List<Santri> getAll();
-//    public List<Setoran> getAllSetoran();
+    public List<Setoran> getAllSetoranBySantriId(int santriId); // Metode baru untuk mendapatkan setoran santri
+    public List<Setoran> getSetoranSantriByKeyword(int santriId, String keyword); // Metode baru untuk mencari setoran
 }

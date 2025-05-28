@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextArea; // Import JTextArea
 import javax.swing.JTextField;
 import mvc.Controller.SantriController;
 import mvc.Model.Santri;
@@ -26,15 +26,17 @@ public class FormInputSantri extends javax.swing.JFrame {
      */
     public FormInputSantri() {
         initComponents();
-        controller = new SantriController(null, this, null);
+        setLocationRelativeTo(null);
+        controller = new SantriController(this);
         BtnSave.addActionListener(e -> controller.insertSantriAndShowDashboard()); // Ganti pemanggilan metode di sini
         clearForm();
     }
     
     public FormInputSantri(int userId) { // Konstruktor yang menerima ID user
         initComponents();
+        setLocationRelativeTo(null);
         this.userIdFromAuth = userId; // Simpan ID user di sini
-        controller = new SantriController(null, this, null);
+        controller = new SantriController(this);
         BtnSave.addActionListener(e -> controller.insertSantriAndShowDashboard());
         clearForm();
         System.out.println("Form Santri dibuka untuk User ID: " + userId);
@@ -42,20 +44,19 @@ public class FormInputSantri extends javax.swing.JFrame {
     
     public Santri getSantriDataFromForm() {
         Santri santri = new Santri();
-        // ID tidak diset di sini karena akan dihasilkan oleh database
         santri.setNama_santri(getTxtNama().getText());
         santri.setUser_id(userIdFromAuth);
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sesuaikan format dengan input
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // UBAH FORMAT DI SINI
             santri.setTanggal_lahir(sdf.parse(getTxtTanggalLahir().getText()));
             santri.setTanggal_masuk(sdf.parse(getTxtTanggalMasuk().getText()));
         } catch (java.text.ParseException e) {
             JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY.", "Error Tanggal", JOptionPane.ERROR_MESSAGE);
-            return null; // Kembalikan null jika ada error parsing tanggal
+            return null;
         }
         santri.setAlamat(getTxtAlamat().getText());
         santri.setNama_wali(getTxtNamaWali().getText());
-        santri.setNomor_telepon(getTxtNomorTlp().getText()); // Perhatikan getTxtNomorTelepon()
+        santri.setNomor_telepon(getTxtNomorTlp().getText());
         santri.setStatus(getSetStatus().getSelectedItem().toString());
         return santri;
     }
@@ -309,7 +310,7 @@ public class FormInputSantri extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -328,11 +329,27 @@ public class FormInputSantri extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FormInputSantri.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FormInputSantri.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FormInputSantri.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FormInputSantri.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FormInputSantri.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormInputSantri().setVisible(true);
+                new FormInputSantri(1).setVisible(true); // Memberikan ID placeholder untuk testing
             }
         });
     }

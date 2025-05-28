@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package mvc.Model;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -12,6 +13,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class TableModelSantri extends AbstractTableModel{
     List<Santri> lb;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     
     public TableModelSantri(List<Santri> lb){
         this.lb =lb;
@@ -55,7 +57,8 @@ public class TableModelSantri extends AbstractTableModel{
             case 1:
                 return lb.get(row).getNama_santri();
             case 2:
-                return lb.get(row).getTanggal_lahir();
+                // Format tanggal lahir
+                return lb.get(row).getTanggal_lahir() != null ? dateFormat.format(lb.get(row).getTanggal_lahir()) : "";
             case 3:
                 return lb.get(row).getAlamat();
             case 4:
@@ -63,7 +66,8 @@ public class TableModelSantri extends AbstractTableModel{
             case 5:
                 return lb.get(row).getNama_wali();
             case 6:
-                return lb.get(row).getTanggal_masuk();
+                // Format tanggal masuk
+                return lb.get(row).getTanggal_masuk() != null ? dateFormat.format(lb.get(row).getTanggal_masuk()) : "";
             case 7:
                 return lb.get(row).getStatus();
             default:

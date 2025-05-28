@@ -3,12 +3,25 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/View/FormInputSantri.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/View/FormDashSantri.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/Model/Setoran.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/Model/TabelModelSetoran.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/Model/Santri.java</file>
             <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/DAO/DAOUstadz.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/View/FormEditSantri.java</file>
             <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/View/FormUstadz.java</file>
-            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/Controller/ControllerUstadz.java</file>
             <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/Model/Ustadz.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/Controller/ControllerSetoran.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/DAOInterface/ISantri.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/DAO/DAOSetoran.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/View/FormInputSantri.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/Model/TabelModelUstadz.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/View/FormSetoran.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/Controller/ControllerUstadz.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/Controller/SantriController.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/DAOInterface/ISetoran.java</file>
             <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/View/DasboardUstadz.java</file>
+            <file>file:/D:/KULIAH/D.%20SEMESTER%204/2.%20Pemograman%20Berbasis%20Objek/Projek%20Akhir/ProjekPBO/src/mvc/DAO/SantriDAO.java</file>
         </group>
     </open-files>
 </project-private>

@@ -19,26 +19,28 @@ import mvc.Model.Santri;
  */
 public class FormDashSantri extends javax.swing.JFrame {
     SantriController controller;
-    private int loggedInSantriId;
+    private int loggedInUserId;
     
     /**
      * Creates new form FormSantri
      */
-    public FormDashSantri(int loggedInSantriId) {
+    public FormDashSantri(int loggedInUserId) {
         initComponents();
-        this.loggedInSantriId = loggedInSantriId;
-        controller = new SantriController(this, null, null); // Inisialisasi controller
-        controller.displayLoggedInSantriData(loggedInSantriId); // Panggil method untuk menampilkan data
+        setLocationRelativeTo(null);
+        this.loggedInUserId = loggedInUserId;
+        jTable1.setModel(new mvc.Model.TabelModelSetoran(new java.util.ArrayList<>())); // Inisialisasi kosong
+        controller = new SantriController(this, loggedInUserId); // Gunakan konstruktor baru
+        controller.displayLoggedInSantriData(loggedInUserId);
+        controller.fillSetoranTableForLoggedInSantri(); // Panggil metode untuk mengisi tabel setoran
 
         // Tambahkan action listener untuk tombol Edit dan Logout
         BtnEdit1.addActionListener(e -> {
-            // Saat tombol Edit diklik, panggil metode prepareEditForm dari controller
-            controller.prepareEditForm(this.loggedInSantriId);
-            this.dispose(); // Opsional: tutup dashboard saat form edit dibuka
+            controller.prepareEditForm(this.loggedInUserId);
+            this.dispose();
         });
-        BtnLogout.addActionListener(e -> controller.logout()); // Implementasikan logout di controller
-        BtnCari.addActionListener(e -> JOptionPane.showMessageDialog(this, "Fitur Setoran Santri akan diimplementasikan!"));
-  
+        BtnLogout.addActionListener(e -> controller.logout());
+        BtnCari.addActionListener(e -> controller.searchSetoranForLoggedInSantri()); // Panggil metode pencarian
+        // Inisialisasi model tabel agar tidak kosong sebelum data dimuat
     }
     
     public void displaySantri(Santri santri) {
@@ -486,8 +488,8 @@ public class FormDashSantri extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(BtnEdit1)
                         .addGap(16, 16, 16)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pack();
@@ -546,70 +548,23 @@ public class FormDashSantri extends javax.swing.JFrame {
     private javax.swing.JButton BtnEdit1;
     private javax.swing.JButton BtnLogout;
     private javax.swing.JLabel LblAlamat;
-    private javax.swing.JLabel LblAlamat1;
-    private javax.swing.JLabel LblAlamat2;
-    private javax.swing.JLabel LblAlamat3;
-    private javax.swing.JLabel LblAlamat4;
     private javax.swing.JLabel LblAlamat5;
     private javax.swing.JLabel LblNama;
-    private javax.swing.JLabel LblNama1;
-    private javax.swing.JLabel LblNama2;
-    private javax.swing.JLabel LblNama3;
-    private javax.swing.JLabel LblNama4;
     private javax.swing.JLabel LblNama5;
     private javax.swing.JLabel LblNamaWali;
     private javax.swing.JLabel LblNamaWali1;
-    private javax.swing.JLabel LblNomorTelepon;
-    private javax.swing.JLabel LblNomorTelepon1;
-    private javax.swing.JLabel LblNomorTelepon2;
-    private javax.swing.JLabel LblNomorTelepon3;
     private javax.swing.JLabel LblNomorTelepon4;
     private javax.swing.JLabel LblNomorTlp;
     private javax.swing.JLabel LblStatus;
-    private javax.swing.JLabel LblStatus1;
-    private javax.swing.JLabel LblStatus2;
-    private javax.swing.JLabel LblStatus3;
-    private javax.swing.JLabel LblStatus4;
     private javax.swing.JLabel LblStatus5;
-    private javax.swing.JLabel LblTanggalBergabung;
-    private javax.swing.JLabel LblTanggalBergabung1;
-    private javax.swing.JLabel LblTanggalBergabung2;
-    private javax.swing.JLabel LblTanggalBergabung3;
     private javax.swing.JLabel LblTanggalBergabung4;
     private javax.swing.JLabel LblTanggalLahir;
-    private javax.swing.JLabel LblTanggalLahir1;
-    private javax.swing.JLabel LblTanggalLahir2;
-    private javax.swing.JLabel LblTanggalLahir3;
-    private javax.swing.JLabel LblTanggalLahir4;
     private javax.swing.JLabel LblTanggalLahir5;
     private javax.swing.JLabel LblTanggalMasuk;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
-    private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
@@ -621,23 +576,14 @@ public class FormDashSantri extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField txtCari;

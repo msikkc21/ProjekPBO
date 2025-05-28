@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.sql.*;
-import java.text.SimpleDateFormat;
+import mvc.Model.Setoran;
+import mvc.Model.Ustadz;
 
 /**
  *
@@ -24,17 +24,27 @@ import java.text.SimpleDateFormat;
  */
 public class SantriDAO implements ISantri{
     Connection con;
+    DAOSetoran daoSetoran;
     
     final String insert = "INSERT INTO santri (user_id, nama_santri, tanggal_lahir, alamat, nomor_telepon, nama_wali, tanggal_masuk, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    final String update = "UPDATE santri set nama_santri=?, tanggal_lahir=?, alamat=?, nomor_telepon=?, nama_wali=?, tanggal_masuk=?, status=? WHERE user_id=?;";
+    final String update = "UPDATE santri set nama_santri=?, tanggal_lahir=?, alamat=?, nomor_telepon=?, nama_wali=?, tanggal_masuk=?, status=? WHERE id=?;";
     final String delete = "DELETE FROM santri where id=?;";
-    final String selectById = "SELECT * FROM santri WHERE id=?;";
-    final String selectByUserId = "SELECT * FROM santri WHERE user_id=?;";
-    final String select = "SELECT * FROM santri;";
+    final String selectById = "SELECT id, user_id, nama_santri, tanggal_lahir, alamat, nomor_telepon, nama_wali, tanggal_masuk, status FROM santri WHERE id=?;";
+    final String selectByUserId = "SELECT id, user_id, nama_santri, tanggal_lahir, alamat, nomor_telepon, nama_wali, tanggal_masuk, status FROM santri WHERE user_id=?;";
+    final String select = "SELECT id, user_id, nama_santri, tanggal_lahir, alamat, nomor_telepon, nama_wali, tanggal_masuk, status FROM santri;";
     
     public SantriDAO (){
         con = Koneksi.getConnection();
+        daoSetoran = new DAOSetoran();
     } 
+    
+    public List<Setoran> getAllSetoranBySantriId(int santriId) {
+        return daoSetoran.getSetoranBySantriId(santriId); // Panggil metode baru di DAOSetoran
+    }
+    
+    public List<Setoran> getSetoranSantriByKeyword(int santriId, String keyword) {
+        return daoSetoran.getSetoranBySantriIdAndKeyword(santriId, keyword); // Panggil metode baru di DAOSetoran
+    }
     
     public void insert(Santri s){
         try(PreparedStatement statement = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)){
@@ -97,7 +107,7 @@ public class SantriDAO implements ISantri{
                 santri.setTanggal_lahir(rs.getDate("tanggal_lahir"));
                 santri.setAlamat(rs.getString("alamat"));
                 santri.setNomor_telepon(rs.getString("nomor_telepon"));
-                santri.setTanggal_masuk(rs.getDate("tanggal_bergabung"));
+                santri.setTanggal_masuk(rs.getDate("tanggal_masuk"));
                 santri.setStatus(rs.getString("status"));
             }
         } catch (SQLException e) {

@@ -11,7 +11,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import mvc.Controller.SantriController;
 import mvc.Model.Santri;
-import mvc.View.FormInputSantri;
 /**
  *
  * @author User
@@ -19,55 +18,66 @@ import mvc.View.FormInputSantri;
 public class FormEditSantri extends javax.swing.JFrame {
     private SantriController controller;
     private int santriIdToEdit;
+    private Integer userIdAssociated;
     
     /**
      * Creates new form FormEditSantri
      */
-    public FormEditSantri(int santriId) {
+    public FormEditSantri(int santriId) { // Menerima ID unik santri
         initComponents();
+        setLocationRelativeTo(null);
         this.santriIdToEdit = santriId;
-        controller = new SantriController(null, null, this);
-        //        controller.fillEditForm(ustadzId); // Panggil method untuk mengisi form
+        controller = new SantriController(this);
+        Santri santri = new mvc.DAO.SantriDAO().getById(santriId); // Pastikan getById sekarang mengembalikan user_id
+        if (santri != null) {
+            setSantriDataToForm(santri);
+            // userIdAssociated akan disetel di setSantriDataToForm()
+        } else {
+            JOptionPane.showMessageDialog(this, "Data Santri tidak ditemukan untuk pengeditan.", "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+        }
 
-        // Tambahkan action listener untuk tombol Simpan dan Kembali
         BtnUpdate.addActionListener(e -> controller.updateSantri());
         BtnBack.addActionListener(e -> {
-            this.dispose(); // Tutup form edit
-            // Optional: Buka kembali dashboard atau refresh dashboard
-            FormDashSantri dashboard = new FormDashSantri(this.santriIdToEdit);
-            dashboard.setVisible(true);
+            this.dispose();
+            // Lakukan pengecekan null sebelum menggunakan userIdAssociated
+            if (this.userIdAssociated != null && this.userIdAssociated != 0) {
+                new FormDashSantri(this.userIdAssociated).setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal kembali ke Dashboard. User ID Santri tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
     }
 
     public void setSantriDataToForm(Santri santri) {
         if (santri != null) {
-            // Kita tidak punya TxtID di sini, jadi kita simpan di field `ustadzIdToEdit`
-            // TxtID.setText(ustadz.getId().toString()); // Jika Anda punya TxtID tersembunyi
+            this.userIdAssociated = santri.getUser_id(); // Ini harusnya sudah tidak null jika getById benar
             getTxtNama().setText(santri.getNama_santri());
-            getTxtTanggalLahir().setText(formatDate(santri.getTanggal_lahir())); // Format tanggal
+            getTxtTanggalLahir().setText(formatDate(santri.getTanggal_lahir()));
             getTxtNomorTlp().setText(santri.getNomor_telepon());
-            getTxtTanggalMasuk().setText(formatDate(santri.getTanggal_masuk())); // Format tanggal
+            getTxtTanggalMasuk().setText(formatDate(santri.getTanggal_masuk()));
             getTxtAlamat().setText(santri.getAlamat());
             getTxtNamaWali().setText(santri.getNama_wali());
             getSetStatus().setSelectedItem(santri.getStatus());
         } else {
-            JOptionPane.showMessageDialog(this, "Data Ustadz tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
-            this.dispose(); // Tutup form jika data tidak ditemukan
+            JOptionPane.showMessageDialog(this, "Data Santri tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
         }
     }
     
     public Santri getSantriDataFromForm() {
         Santri santri = new Santri();
-        santri.setId(this.santriIdToEdit); // Set ID dari field yang disimpan
+        santri.setId(this.santriIdToEdit);
+        santri.setUser_id(this.userIdAssociated);
         santri.setNama_santri(txtNama.getText());
         santri.setNama_wali(getTxtNamaWali().getText());
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sesuaikan format dengan input
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // UBAH FORMAT DI SINI
             santri.setTanggal_lahir(sdf.parse(txtTanggalLahir.getText()));
             santri.setTanggal_masuk(sdf.parse(txtTanggalMasuk.getText()));
         } catch (java.text.ParseException e) {
             JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY.", "Error Tanggal", JOptionPane.ERROR_MESSAGE);
-            return null; // Kembalikan null jika ada error parsing tanggal
+            return null;
         }
         santri.setAlamat(txtAlamat.getText());
         santri.setNomor_telepon(txtNomorTlp.getText());
@@ -77,9 +87,9 @@ public class FormEditSantri extends javax.swing.JFrame {
     
     private String formatDate(java.util.Date date) {
         if (date == null) {
-            return ""; // Atau return null, tergantung kebutuhan
+            return "";
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // UBAH FORMAT DI SINI
         return sdf.format(date);
     }
 
@@ -89,7 +99,7 @@ public class FormEditSantri extends javax.swing.JFrame {
         txtNomorTlp.setText("");
         txtTanggalMasuk.setText("");
         txtAlamat.setText("");
-        setStatus.setSelectedIndex(0); // Pilih item pertama
+        setStatus.setSelectedIndex(0);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -335,11 +345,11 @@ public class FormEditSantri extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -362,6 +372,7 @@ public class FormEditSantri extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                // Memberikan ID santri placeholder untuk pengujian
                 new FormEditSantri(1).setVisible(true);
             }
         });

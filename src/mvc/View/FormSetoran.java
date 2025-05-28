@@ -14,6 +14,9 @@ import javax.swing.JTextField;
 import mvc.Controller.ControllerSetoran;
 import mvc.Koneksi.Koneksi;
 import mvc.Model.Setoran;
+import mvc.Model.Santri;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
@@ -21,46 +24,51 @@ import mvc.Model.Setoran;
  */
 public class FormSetoran extends javax.swing.JFrame {
     ControllerSetoran cbt;
-    int ustadzId;
+    private int ustadzId;
     /**
      * Creates new form FormSetoran
      */
     public FormSetoran(int id) {
         initComponents();
-        ustadzId = id;
+        setLocationRelativeTo(null);
+        this.ustadzId = id; // Simpan ID ustadz yang login
         cbt = new ControllerSetoran(this);
-        cbt.getAllSantri;
+        // Pastikan ini adalah panggilan metode, bukan akses properti
+        cbt.isiComboBoxSantri(); // Panggil ini untuk mengisi combobox
+        cbt.isiTable(); // Panggil untuk mengisi tabel saat form dibuka
+
+        // Tambahkan action listeners untuk tombol
+        jButton4.addActionListener(e -> cbt.insert());
+        jButton2.addActionListener(e -> cbt.update());
+        jButton5.addActionListener(e -> cbt.delete());
+        jButton6.addActionListener(e -> cbt.cariSantri());
+        btnKembali.addActionListener(e -> cbt.kembaliToDashboard());
+        TabelSetoran.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) { // Hanya merespons klik tunggal
+                    int rowIndex = TabelSetoran.getSelectedRow();
+                    if (rowIndex != -1) { // Pastikan ada baris yang dipilih
+                        cbt.selectRow(rowIndex); // Panggil metode di controller
+                    }
+                }
+            }
+        });
     }
     
-    public Setoran getSetoranFromForm() {
-        Setoran setoran = new Setoran();
-        setoran.setUstadzid(this.ustadzId);
-        
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            Date tglSetoran = sdf.parse(tanggalText.getText());
-            setoran.setTanggal(tglSetoran);
-        } catch (java.text.ParseException e) {
-            JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY. " + e.getMessage(), "Error Tanggal", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-        setoran.setJuz(Integer.parseInt(juzText.getText()));
-        setoran.setWaktu(waktuCom.getSelectedItem().toString());
-        setoran.setKeterangan(ketText.getText());
-        setoran.setNilai(NilaiText.getSelectedItem().toString());
-        setoran.setHalaman(Integer.parseInt(halText.getText()));
-        return setoran;
+    public int getUstadzId() {
+        return ustadzId;
     }
     
-    public JComboBox getSantriText (){
-        return santriCom;
+    public JComboBox<Santri> getSantriText (){ // Ubah tipe generic menjadi Santri
+        return (JComboBox<Santri>) santriCom;
     }
     
     public JTextField getTanggalText(){
         return tanggalText;
     }
-    public JComboBox getWaktuText(){
-        return waktuCom;
+    public JComboBox<String> getWaktuText(){ // Ubah tipe generic menjadi String
+        return (JComboBox<String>) waktuCom;
     }
     public JTextField getJuzText(){
         return juzText;
@@ -71,8 +79,8 @@ public class FormSetoran extends javax.swing.JFrame {
     public JTextField getKeteranganText(){
         return ketText;
     }
-    public JComboBox getNilaiText(){
-        return NilaiText;
+    public JComboBox<String> getNilaiText(){ // Ubah tipe generic menjadi String
+        return (JComboBox<String>) NilaiText;
     }
     public JTable getTabelData(){
         return TabelSetoran;
@@ -108,6 +116,7 @@ public class FormSetoran extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        btnKembali = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -124,7 +133,6 @@ public class FormSetoran extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(TabelSetoran);
 
-        santriCom.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Santri A", "Santri B", "Santri C", "Santri D" }));
         santriCom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 santriComActionPerformed(evt);
@@ -218,6 +226,13 @@ public class FormSetoran extends javax.swing.JFrame {
             }
         });
 
+        btnKembali.setText("Kembali");
+        btnKembali.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKembaliActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -248,20 +263,24 @@ public class FormSetoran extends javax.swing.JFrame {
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(NilaiText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(ketText, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(halText, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(juzText, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(waktuCom, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(tanggalText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(btnKembali)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(NilaiText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(ketText, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(halText, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(juzText, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(waktuCom, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tanggalText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnKembali))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -348,6 +367,10 @@ public class FormSetoran extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ketTextActionPerformed
 
+    private void btnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKembaliActionPerformed
+
+    }//GEN-LAST:event_btnKembaliActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -376,9 +399,25 @@ public class FormSetoran extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FormSetoran.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FormSetoran.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FormSetoran.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FormSetoran.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormSetoran().setVisible(true);
+                new FormSetoran(1).setVisible(true);
             }
         });
     }
@@ -386,6 +425,7 @@ public class FormSetoran extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> NilaiText;
     private javax.swing.JTable TabelSetoran;
+    private javax.swing.JButton btnKembali;
     private javax.swing.JTextField halText;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
@@ -401,7 +441,7 @@ public class FormSetoran extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField juzText;
     private javax.swing.JTextField ketText;
-    private javax.swing.JComboBox<String> santriCom;
+    private javax.swing.JComboBox<Santri> santriCom;
     private javax.swing.JTextField tanggalText;
     private javax.swing.JComboBox<String> waktuCom;
     // End of variables declaration//GEN-END:variables

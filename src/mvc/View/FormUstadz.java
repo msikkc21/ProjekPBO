@@ -26,6 +26,7 @@ public class FormUstadz extends javax.swing.JFrame {
      */
     public FormUstadz() {
         initComponents();
+        setLocationRelativeTo(null);
         cbt = new ControllerUstadz(this, null, null);
         BtnSimpan.addActionListener(e -> cbt.insertUstadzAndShowDashboard());
         clearForm();
@@ -33,6 +34,7 @@ public class FormUstadz extends javax.swing.JFrame {
 
     public FormUstadz(int userId) { // Konstruktor yang menerima ID user
         initComponents();
+        setLocationRelativeTo(null);
         this.userIdFromAuth = userId; // Simpan ID user di sini
         cbt = new ControllerUstadz(this, null, null);
         BtnSimpan.addActionListener(e -> cbt.insertUstadzAndShowDashboard());
@@ -41,27 +43,24 @@ public class FormUstadz extends javax.swing.JFrame {
     }
     
     public Ustadz getUstadzDataFromForm() {
-        Ustadz ustadz = new Ustadz();
-        ustadz.setUserId(this.userIdFromAuth); // <--- BARU: Set userId di objek Ustadz
-        // ID ustadz (primary key tabel ustadz) akan di-generate otomatis oleh database.
-        // Tidak perlu set ustadz.setId() di sini.
-
-        ustadz.setNama(TxtNama.getText());
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            Date tglLahir = sdf.parse(TxtTanggalLahir.getText());
-            Date tglBergabung = sdf.parse(TxtTanggalBergabung.getText());
-            ustadz.setTanggal_lahir(tglLahir);
-            ustadz.setTanggal_bergabung(tglBergabung);
-        } catch (java.text.ParseException e) {
-            JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY. " + e.getMessage(), "Error Tanggal", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-        ustadz.setAlamat(TxtAlamat.getText());
-        ustadz.setNomor_telepon(TxtTelepon.getText());
-        ustadz.setStatus(ComboStatus.getSelectedItem().toString());
-        return ustadz;
+    Ustadz ustadz = new Ustadz();
+    ustadz.setUserId(this.userIdFromAuth);
+    ustadz.setNama(TxtNama.getText());
+    try {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // UBAH FORMAT DI SINI
+        Date tglLahir = sdf.parse(TxtTanggalLahir.getText());
+        Date tglBergabung = sdf.parse(TxtTanggalBergabung.getText());
+        ustadz.setTanggal_lahir(tglLahir);
+        ustadz.setTanggal_bergabung(tglBergabung);
+    } catch (java.text.ParseException e) {
+        JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY. " + e.getMessage(), "Error Tanggal", JOptionPane.ERROR_MESSAGE);
+        return null;
     }
+    ustadz.setAlamat(TxtAlamat.getText());
+    ustadz.setNomor_telepon(TxtTelepon.getText());
+    ustadz.setStatus(ComboStatus.getSelectedItem().toString());
+    return ustadz;
+}
     
     public void clearForm() {
         TxtNama.setText("");
@@ -88,12 +87,12 @@ public class FormUstadz extends javax.swing.JFrame {
         return TxtTanggalBergabung;
     }
     
-    public JComboBox getComboStatus(){
-        return ComboStatus;
+    public JComboBox<String> getComboStatus(){ // Ubah generic menjadi String
+        return (JComboBox<String>) ComboStatus;
     }
     
-    public JTextArea getTxtAlamat(){
-        return TxtAlamat;
+    public JTextArea getTxtAlamat(){ // Perbaikan: Ubah return type menjadi JTextArea
+        return (JTextArea) TxtAlamat; // Lakukan casting
     }
     
     public JButton getBtnSimpan(){

@@ -27,6 +27,7 @@ public class EditDashboardUstadz extends javax.swing.JFrame {
      */
      public EditDashboardUstadz(int ustadzId) {
         initComponents();
+        setLocationRelativeTo(null);
         this.ustadzIdToEdit = ustadzId;
         // userIdAssociated akan diset nanti di setUstadzDataToForm() atau bisa juga dilewatkan di konstruktor ini jika tersedia dari panggilan sebelumnya.
         cbt = new ControllerUstadz(null, null, this);

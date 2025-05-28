@@ -22,6 +22,10 @@ public class Santri {
     private Date tanggal_masuk;
     private String status;
     
+    public String toString() {
+        return nama_santri; // Mengembalikan nama_santri agar ditampilkan di JComboBox
+    }
+    
     /**
      * @return the id
      */

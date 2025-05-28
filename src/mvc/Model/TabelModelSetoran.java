@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package mvc.Model;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 //2. membuat tabelmodelsetoran untuk membuat tabelnya nanti
@@ -12,6 +13,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class TabelModelSetoran extends AbstractTableModel{
     List<Setoran>lb;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     
     public TabelModelSetoran(List<Setoran>lb){
         this.lb=lb;
@@ -40,9 +42,9 @@ public class TabelModelSetoran extends AbstractTableModel{
             case 0:
                   return "ID";
               case 1:
-                  return "ID Santri";
+                  return "Nama Santri";
               case 2:
-                  return "ID Ustadz";
+                  return "Nama Ustadz";
               case 3:
                   return "Tanggal";
               case 4:
@@ -66,11 +68,12 @@ public class TabelModelSetoran extends AbstractTableModel{
             case 0:
                 return lb.get(row).getId();
             case 1:
-                return lb.get(row).getSantriid().getNama_santri(); // Tampilkan nama santri
+                return lb.get(row).getSantriid().getNama_santri();
             case 2:
-                return lb.get(row).getUstadzid().getNama(); // Tampilkan nama ustadz
+                return lb.get(row).getUstadzid().getNama();
             case 3:
-                return lb.get(row).getTanggal();
+                // Format tanggal setoran
+                return lb.get(row).getTanggal() != null ? dateFormat.format(lb.get(row).getTanggal()) : "";
             case 4:
                 return lb.get(row).getWaktu();
             case 5:
@@ -83,10 +86,7 @@ public class TabelModelSetoran extends AbstractTableModel{
                 return lb.get(row).getNilai();
             default:
                 return null;
-                
-       
         }
-            
     }
     
     

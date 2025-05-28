@@ -17,7 +17,5 @@ public interface ISetoran {
     public void update(Setoran a);
     public void delete(int id);
     public List<Setoran>getAll();
-    public Santri getCariSantri(int id_santri);
-    public void GetAllSantri();
-    
+    public List<Setoran> getCariSantri(int id_santri);
 }
