@@ -5,6 +5,7 @@
 package mvc.DAOInterface;
 
 import java.util.List;
+import mvc.Model.Santri;
 import mvc.Model.Setoran;
 
 /**
@@ -16,6 +17,7 @@ public interface ISetoran {
     public void update(Setoran a);
     public void delete(int id);
     public List<Setoran>getAll();
-    public List<Setoran> getCariSantri(int id_santri);
+    public Santri getCariSantri(int id_santri);
+    public void GetAllSantri();
     
 }

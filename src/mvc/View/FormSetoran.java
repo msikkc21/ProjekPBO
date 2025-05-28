@@ -5,11 +5,15 @@
 package mvc.View;
 
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import mvc.Controller.ControllerSetoran;
 import mvc.Koneksi.Koneksi;
+import mvc.Model.Setoran;
 
 /**
  *
@@ -17,13 +21,37 @@ import mvc.Koneksi.Koneksi;
  */
 public class FormSetoran extends javax.swing.JFrame {
     ControllerSetoran cbt;
+    int ustadzId;
     /**
      * Creates new form FormSetoran
      */
-    public FormSetoran() {
+    public FormSetoran(int id) {
         initComponents();
+        ustadzId = id;
         cbt = new ControllerSetoran(this);
+        cbt.getAllSantri;
     }
+    
+    public Setoran getSetoranFromForm() {
+        Setoran setoran = new Setoran();
+        setoran.setUstadzid(this.ustadzId);
+        
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date tglSetoran = sdf.parse(tanggalText.getText());
+            setoran.setTanggal(tglSetoran);
+        } catch (java.text.ParseException e) {
+            JOptionPane.showMessageDialog(this, "Format tanggal salah. Gunakan DD-MM-YYYY. " + e.getMessage(), "Error Tanggal", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        setoran.setJuz(Integer.parseInt(juzText.getText()));
+        setoran.setWaktu(waktuCom.getSelectedItem().toString());
+        setoran.setKeterangan(ketText.getText());
+        setoran.setNilai(NilaiText.getSelectedItem().toString());
+        setoran.setHalaman(Integer.parseInt(halText.getText()));
+        return setoran;
+    }
+    
     public JComboBox getSantriText (){
         return santriCom;
     }

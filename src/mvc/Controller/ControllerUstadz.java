@@ -15,6 +15,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import java.util.Date; // Penting untuk Date object
 import java.text.SimpleDateFormat; // Untuk memformat dan mengurai tanggal
+import mvc.View.FormSetoran;
 
 /**
  *
@@ -140,6 +141,12 @@ public class ControllerUstadz {
         }
         // Redirect ke halaman login (misalnya)
         new FormLogin().setVisible(true);
+    }
+    
+    public void showSetoran(int id){
+        Ustadz u = implUstadz.getByUserId(id);
+        dashboardUstadzView.dispose();
+        new FormSetoran(u.getId()).setVisible(true);
     }
 
     // Metode untuk mengisi tabel (jika ada tabel di dashboard lain atau admin)

@@ -15,12 +15,19 @@ import javax.swing.JOptionPane;
 import mvc.View.FormSetoran;
 
 import javax.swing.JOptionPane;
+import mvc.DAO.SantriDAO;
+import mvc.DAO.DAOUstadz;
+import mvc.DAOInterface.ISantri;
+import mvc.DAOInterface.IUstadz;
+import mvc.Model.Santri;
 
 /**
  *
  * @author Acer
  */
 public class ControllerSetoran {
+    private ISantri implSantri; 
+    private IUstadz implUstadz;
     FormSetoran formsetoran;
     ISetoran implSetoran;
     List<Setoran>list;
@@ -28,10 +35,22 @@ public class ControllerSetoran {
     public ControllerSetoran(FormSetoran formsetoran){
         this.formsetoran = formsetoran;
         implSetoran = new DAOSetoran();
+        implSantri = new SantriDAO(); // Inisialisasi
+        implUstadz = new DAOUstadz(); // Inisialisasi
         list = implSetoran.getAll();
+        isiTable(); // Panggil ini setelah inisialisasi
+        isiComboBoxSantri(); // Panggil metode ini saat inisialisasi
     }
     
-        public void insert() {
+    public void isiComboBoxSantri() {
+        List<Santri> santriList = implSantri.getAll(); // Ambil semua santri
+        formsetoran.getSantriText().removeAllItems(); // Bersihkan item lama
+        for (Santri s : santriList) {
+            formsetoran.getSantriText().addItem(s); // Tambahkan objek Santri ke combobox
+        }
+    }
+    
+    public void insert() {
         try {
             Setoran s = new Setoran();
              s.setSantriid((santri) formsetoran.getSantriText().getSelectedItem());

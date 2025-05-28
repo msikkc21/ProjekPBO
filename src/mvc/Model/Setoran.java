@@ -5,6 +5,7 @@
 package mvc.Model;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  *
@@ -113,14 +114,14 @@ public class Setoran {
     /**
      * @return the tanggal
      */
-    public LocalDate getTanggal() {
+    public Date getTanggal() {
         return tanggal;
     }
 
     /**
      * @param tanggal the tanggal to set
      */
-    public void setTanggal(LocalDate tanggal) {
+    public void setTanggal(Date tanggal) {
         this.tanggal = tanggal;
     }
 
@@ -143,17 +144,11 @@ public class Setoran {
     private Integer id;
     private Santri santriid;
     private Ustadz ustadzid;
-    private LocalDate tanggal;
+    private Date tanggal;
     private String waktu;
     private Integer juz;
     private Integer halaman;
     private String keterangan;
     private String nilai;
-
-    public void setUstadzid(mvc.DAO.Ustadz ustadz) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
- 
     
 }

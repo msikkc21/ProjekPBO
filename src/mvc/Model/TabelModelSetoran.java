@@ -66,9 +66,9 @@ public class TabelModelSetoran extends AbstractTableModel{
             case 0:
                 return lb.get(row).getId();
             case 1:
-                return lb.get(row).getSantriid();
+                return lb.get(row).getSantriid().getNama_santri(); // Tampilkan nama santri
             case 2:
-                return lb.get(row).getUstadzid();
+                return lb.get(row).getUstadzid().getNama(); // Tampilkan nama ustadz
             case 3:
                 return lb.get(row).getTanggal();
             case 4:

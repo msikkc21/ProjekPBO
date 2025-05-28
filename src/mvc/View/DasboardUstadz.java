@@ -32,7 +32,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
             this.dispose();
         });
         BtnLogout.addActionListener(e -> cbt.logout());
-        BtnSetoranSantri.addActionListener(e -> JOptionPane.showMessageDialog(this, "Fitur Setoran Santri akan diimplementasikan!"));
+        BtnSetoranSantri.addActionListener(e -> cbt.showSetoran(loggedInUserId));
     }
     
     public void displayUstadz(Ustadz ustadz) {
