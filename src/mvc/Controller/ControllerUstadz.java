@@ -156,11 +156,11 @@ public class ControllerUstadz {
     }
 
     // Metode untuk mengisi tabel (jika ada tabel di dashboard lain atau admin)
-    public void fillTableAllUstadz() {
+    public void fillUstadzTable() {
         if (dashboardUstadzView != null) { // Atau view lain yang punya tabel
             listUstadz = implUstadz.getAll();
             TabelModelUstadz tmu = new TabelModelUstadz(listUstadz);
-            // dashboardUstadzView.getTableData().setModel(tmu); // Anda perlu getter getTableData di DasboardUstadz
+            dashboardUstadzView.getTblUstadz().setModel(tmu); // Anda perlu getter getTableData di DasboardUstadz
         }
     }
 
@@ -179,11 +179,11 @@ public class ControllerUstadz {
         }
     }
 
-    public void searchUstadzByName(String nama) {
+    public void CariNama(String nama) {
         listUstadz = implUstadz.getCariNama(nama);
         TabelModelUstadz tmu = new TabelModelUstadz(listUstadz);
         // Jika ada tabel di dashboard/view admin
-        // dashboardUstadzView.getTableData().setModel(tmu);
+        dashboardUstadzView.getTblUstadz().setModel(tmu);
         if (listUstadz.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Tidak ada ustadz dengan nama '" + nama + "' ditemukan.", "Informasi", JOptionPane.INFORMATION_MESSAGE);
         }

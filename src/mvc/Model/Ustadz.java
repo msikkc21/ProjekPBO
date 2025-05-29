@@ -11,7 +11,7 @@ public class Ustadz {
     private String nomor_telepon;
     private Date tanggal_bergabung;
     private String status;
-
+    
     public Ustadz(){}
 
     // Konstruktor untuk membuat objek Ustadz baru (ID mungkin 0 atau null jika belum di-insert)

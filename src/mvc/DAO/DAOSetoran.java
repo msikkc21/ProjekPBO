@@ -56,7 +56,7 @@ public class DAOSetoran implements ISetoran {
                                                "FROM setoran s " +
                                                "JOIN santri sa ON s.santri_id = sa.id " +
                                                "JOIN ustadz u ON s.ustadz_id = u.id " +
-                                               "WHERE s.santri_id = ? AND (s.tanggal LIKE ? OR s.waktu LIKE ? OR s.juz LIKE ? OR s.halaman LIKE ? OR s.keterangan LIKE ? OR s.nilai LIKE ?)";
+                                               "WHERE s.santri_id = ? AND (s.tanggal LIKE ? OR s.waktu LIKE ? OR s.juz LIKE ? OR s.halaman LIKE ? OR s.keterangan LIKE ? OR s.nilai LIKE ? OR u.nama_ustadz LIKE ?)";
     
     public DAOSetoran() {
         connection = Koneksi.getConnection();
@@ -225,6 +225,7 @@ public class DAOSetoran implements ISetoran {
             statement.setString(5, searchKeyword); // halaman
             statement.setString(6, searchKeyword); // keterangan
             statement.setString(7, searchKeyword); // nilai
+            statement.setString(8, searchKeyword); // nama ustadz
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {

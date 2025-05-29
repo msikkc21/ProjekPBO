@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import mvc.Controller.ControllerUstadz;
 import mvc.Model.Ustadz;
 
@@ -25,9 +27,11 @@ public class DasboardUstadz extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         this.loggedInUserId = loggedInUserId; // Simpan user ID
+        TblUstadz.setModel(new mvc.Model.TabelModelUstadz(new java.util.ArrayList<>()));
         cbt = new ControllerUstadz(null, this, null);
         cbt.displayLoggedInUstadzData(loggedInUserId); // Panggil method untuk menampilkan data berdasarkan user ID
-
+        cbt.fillUstadzTable();
+        
         BtnEdit.addActionListener(e -> {
             cbt.prepareEditForm(this.loggedInUserId); // Kirim USER ID ke form edit
             this.dispose();
@@ -86,6 +90,14 @@ public class DasboardUstadz extends javax.swing.JFrame {
     public JLabel getLblAlamat() {
         return LblAlamat;
     }
+    
+    public JTable getTblUstadz() {
+        return TblUstadz;
+    }
+    
+    public JTextField getTxtCariNama() {
+        return TxtCariNama;
+    }
 
     // Getters untuk JButton (sudah ada, bagus)
     public JButton getBtnEdit() {
@@ -99,7 +111,11 @@ public class DasboardUstadz extends javax.swing.JFrame {
     public JButton getBtnLogout() {
         return BtnLogout;
     }
-
+    
+    public JButton getBtnCariNama() {
+        return BtnCariNama;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -130,6 +146,11 @@ public class DasboardUstadz extends javax.swing.JFrame {
         BtnLogout = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         BtnSetoranSantri = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TblUstadz = new javax.swing.JTable();
+        jLabel9 = new javax.swing.JLabel();
+        TxtCariNama = new javax.swing.JTextField();
+        BtnCariNama = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 153, 153));
@@ -281,7 +302,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 537, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(0, 102, 51));
@@ -330,6 +351,34 @@ public class DasboardUstadz extends javax.swing.JFrame {
             }
         });
 
+        TblUstadz.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(TblUstadz);
+
+        jLabel9.setText("Cari Nama Ustadz");
+
+        TxtCariNama.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtCariNamaActionPerformed(evt);
+            }
+        });
+
+        BtnCariNama.setText("Cari");
+        BtnCariNama.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnCariNamaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -344,7 +393,14 @@ public class DasboardUstadz extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(BtnSetoranSantri))
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(18, 18, 18)
+                        .addComponent(TxtCariNama, javax.swing.GroupLayout.PREFERRED_SIZE, 616, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BtnCariNama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -352,13 +408,20 @@ public class DasboardUstadz extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TxtCariNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(BtnCariNama))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnEdit)
                     .addComponent(BtnSetoranSantri))
-                .addGap(16, 78, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -376,6 +439,15 @@ public class DasboardUstadz extends javax.swing.JFrame {
     private void BtnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLogoutActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnLogoutActionPerformed
+
+    private void TxtCariNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtCariNamaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtCariNamaActionPerformed
+
+    private void BtnCariNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCariNamaActionPerformed
+        // TODO add your handling code here:
+        cbt.CariNama(getTxtCariNama().getText());
+    }//GEN-LAST:event_BtnCariNamaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -414,6 +486,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnCariNama;
     private javax.swing.JButton BtnEdit;
     private javax.swing.JButton BtnLogout;
     private javax.swing.JButton BtnSetoranSantri;
@@ -423,6 +496,8 @@ public class DasboardUstadz extends javax.swing.JFrame {
     private javax.swing.JLabel LblStatus;
     private javax.swing.JLabel LblTanggalBergabung;
     private javax.swing.JLabel LblTanggalLahir;
+    private javax.swing.JTable TblUstadz;
+    private javax.swing.JTextField TxtCariNama;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -430,10 +505,12 @@ public class DasboardUstadz extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

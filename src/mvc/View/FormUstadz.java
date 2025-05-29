@@ -59,6 +59,7 @@ public class FormUstadz extends javax.swing.JFrame {
     ustadz.setAlamat(TxtAlamat.getText());
     ustadz.setNomor_telepon(TxtTelepon.getText());
     ustadz.setStatus(ComboStatus.getSelectedItem().toString());
+    
     return ustadz;
 }
     
