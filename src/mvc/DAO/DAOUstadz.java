@@ -26,7 +26,7 @@ public class DAOUstadz implements IUstadz {
 
     final String insert = "INSERT INTO ustadz (user_id, nama_ustadz, tanggal_lahir, alamat, nomor_telepon, tanggal_bergabung, status) VALUES (?, ?, ?, ?, ?, ?, ?);"; //
     final String update = "UPDATE ustadz SET nama_ustadz=?, tanggal_lahir=?, alamat=?, nomor_telepon=?, tanggal_bergabung=?, status=? WHERE id=?;";
-    final String delete = "DELETE FROM ustadz WHERE id=?;";
+    final String delete = "DELETE FROM user WHERE id=?;";
     final String selectById = "SELECT * FROM ustadz WHERE id=?;";
     final String selectByUserId = "SELECT * FROM ustadz WHERE user_id=?;"; // <--- BARU: Query untuk mencari berdasarkan user_id
     final String selectAll = "SELECT * FROM ustadz;";
@@ -77,9 +77,9 @@ public class DAOUstadz implements IUstadz {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int user_id) {
         try (PreparedStatement statement = con.prepareStatement(delete)) {
-            statement.setInt(1, id);
+            statement.setInt(1, user_id);
             statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(DAOUstadz.class.getName()).log(Level.SEVERE, null, e);

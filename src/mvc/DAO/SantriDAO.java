@@ -28,7 +28,7 @@ public class SantriDAO implements ISantri{
     
     final String insert = "INSERT INTO santri (user_id, nama_santri, tanggal_lahir, alamat, nomor_telepon, nama_wali, tanggal_masuk, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     final String update = "UPDATE santri set nama_santri=?, tanggal_lahir=?, alamat=?, nomor_telepon=?, nama_wali=?, tanggal_masuk=?, status=? WHERE id=?;";
-    final String delete = "DELETE FROM santri where id=?;";
+    final String delete = "DELETE FROM user where id=?;";
     final String selectById = "SELECT id, user_id, nama_santri, tanggal_lahir, alamat, nomor_telepon, nama_wali, tanggal_masuk, status FROM santri WHERE id=?;";
     final String selectByUserId = "SELECT id, user_id, nama_santri, tanggal_lahir, alamat, nomor_telepon, nama_wali, tanggal_masuk, status FROM santri WHERE user_id=?;";
     final String select = "SELECT id, user_id, nama_santri, tanggal_lahir, alamat, nomor_telepon, nama_wali, tanggal_masuk, status FROM santri;";

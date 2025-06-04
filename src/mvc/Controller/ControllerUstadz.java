@@ -11,6 +11,7 @@ import mvc.View.FormUstadz;
 import mvc.View.Auth.FormLogin;
 import mvc.View.DasboardUstadz;
 import mvc.View.EditDashboardUstadz;
+import mvc.View.Auth.FormLogin;
 import java.util.List;
 import javax.swing.JOptionPane;
 import java.util.Date; // Penting untuk Date object
@@ -176,6 +177,8 @@ public class ControllerUstadz {
         if (confirm == JOptionPane.YES_OPTION) {
             implUstadz.delete(ustadzId); // Hapus berdasarkan ID unik ustadz
             JOptionPane.showMessageDialog(null, "Data Ustadz berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            dashboardUstadzView.dispose();
+            new FormLogin().setVisible(true);
         }
     }
 

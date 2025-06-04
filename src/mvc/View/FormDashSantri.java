@@ -41,6 +41,7 @@ public class FormDashSantri extends javax.swing.JFrame {
         BtnLogout.addActionListener(e -> controller.logout());
         BtnCari.addActionListener(e -> controller.searchSetoranForLoggedInSantri()); // Panggil metode pencarian
         // Inisialisasi model tabel agar tidak kosong sebelum data dimuat
+        BtnHapus.addActionListener(e -> controller.deleteSantri(loggedInUserId));
     }
     
     public void displaySantri(Santri santri) {
@@ -100,6 +101,7 @@ public class FormDashSantri extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         BtnLogout = new javax.swing.JButton();
+        BtnHapus = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         txtCari = new javax.swing.JTextField();
@@ -235,6 +237,11 @@ public class FormDashSantri extends javax.swing.JFrame {
         BtnLogout.setForeground(new java.awt.Color(255, 255, 255));
         BtnLogout.setText("Logout");
 
+        BtnHapus.setBackground(new java.awt.Color(204, 204, 0));
+        BtnHapus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnHapus.setForeground(new java.awt.Color(255, 255, 255));
+        BtnHapus.setText("Hapus Akun");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -243,6 +250,8 @@ public class FormDashSantri extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(BtnHapus)
+                .addGap(18, 18, 18)
                 .addComponent(BtnLogout)
                 .addGap(23, 23, 23))
         );
@@ -252,7 +261,8 @@ public class FormDashSantri extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(BtnLogout))
+                    .addComponent(BtnLogout)
+                    .addComponent(BtnHapus))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -546,6 +556,7 @@ public class FormDashSantri extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnCari;
     private javax.swing.JButton BtnEdit1;
+    private javax.swing.JButton BtnHapus;
     private javax.swing.JButton BtnLogout;
     private javax.swing.JLabel LblAlamat;
     private javax.swing.JLabel LblAlamat5;
@@ -594,6 +605,10 @@ public class FormDashSantri extends javax.swing.JFrame {
      */
     public JButton getBtnCari() {
         return BtnCari;
+    }
+    
+    public JButton getBtnHapus() {
+        return BtnHapus;
     }
 
     /**

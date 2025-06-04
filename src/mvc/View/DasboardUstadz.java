@@ -38,6 +38,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
         });
         BtnLogout.addActionListener(e -> cbt.logout());
         BtnSetoranSantri.addActionListener(e -> cbt.showSetoran(loggedInUserId));
+        BtnHapus.addActionListener(e -> cbt.deleteUstadz(loggedInUserId));
     }
     
     public void displayUstadz(Ustadz ustadz) {
@@ -116,6 +117,10 @@ public class DasboardUstadz extends javax.swing.JFrame {
         return BtnCariNama;
     }
     
+    public JButton getBtnHapus() {
+        return BtnHapus;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -145,6 +150,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         BtnLogout = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        BtnHapus = new javax.swing.JButton();
         BtnSetoranSantri = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TblUstadz = new javax.swing.JTable();
@@ -256,7 +262,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -322,6 +328,16 @@ public class DasboardUstadz extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Dashboard Ustadz");
 
+        BtnHapus.setBackground(new java.awt.Color(204, 204, 0));
+        BtnHapus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnHapus.setForeground(new java.awt.Color(255, 255, 255));
+        BtnHapus.setText("Hapus Akun");
+        BtnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnHapusActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -330,6 +346,8 @@ public class DasboardUstadz extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(BtnHapus)
+                .addGap(18, 18, 18)
                 .addComponent(BtnLogout)
                 .addContainerGap())
         );
@@ -339,7 +357,8 @@ public class DasboardUstadz extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnLogout)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(BtnHapus))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -449,6 +468,10 @@ public class DasboardUstadz extends javax.swing.JFrame {
         cbt.CariNama(getTxtCariNama().getText());
     }//GEN-LAST:event_BtnCariNamaActionPerformed
 
+    private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnHapusActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -488,6 +511,7 @@ public class DasboardUstadz extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnCariNama;
     private javax.swing.JButton BtnEdit;
+    private javax.swing.JButton BtnHapus;
     private javax.swing.JButton BtnLogout;
     private javax.swing.JButton BtnSetoranSantri;
     private javax.swing.JLabel LblAlamat;

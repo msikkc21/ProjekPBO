@@ -230,6 +230,8 @@ public class SantriController {
         if (confirm == JOptionPane.YES_OPTION) {
             implSantri.delete(id);
             JOptionPane.showMessageDialog(null, "Data Santri berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            frameView.dispose();
+            new FormLogin().setVisible(true);
         }
     }
 }
